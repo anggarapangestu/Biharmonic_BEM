@@ -27,7 +27,7 @@ public:
 };
 
 // Internal Element class: Store the property data of each node inside the domain
-class internalElement
+class intElement
 {
 private:
     // The private variable belongs here
@@ -35,13 +35,13 @@ public:
     // The public variable belongs here
     // Number of the node
     int num;
-    
+
     // Midpoint position (x,y)
     std::vector<double> x;      // Midpoint x coordinate
     std::vector<double> y;      // Midpoint y coordinate
 
     // Boundary condition Dirichet and Neumann
-    std::vector<double> p;      // Airy stress function (phi)
+    std::vector<double> phi;      // Airy stress function (phi)
 
     // Stress properties
     std::vector<double> s_xx;   // Normal stress in x-direction

@@ -79,3 +79,7 @@ delete:
 			fi
 			@rm -f output/*.dat output/*.jpg output/*.png output/*.csv
 			@echo "+------------- DATA DELETED -------------+"
+
+
+# github link 	:= https://github.com/anggarapangestu/NEW_VPM.git
+# token 		:= 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

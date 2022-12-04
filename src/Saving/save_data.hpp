@@ -9,11 +9,12 @@ class dataSaving
 {
 private:
     // The class private method belong here
+    std::ofstream save;
 public:
     // The class public method belong here
-    void simulation_log();
-    void write_internal_data(const internalElement& intElm);
-    void write_BEM_data(const element& elm);
+    void simulation_log();                                      //
+    void write_internal_data(const intElement& intElm);    //
+    void write_BEM_data(const element& elm);                    //
 };
 
 #endif

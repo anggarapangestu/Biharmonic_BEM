@@ -1,7 +1,7 @@
 #include "initialization.hpp"
 
 // Generation of internal node
-void initialization::generate_internal_node(internalElement& intElm){
+void initialization::generate_internal_node(intElement& intElm){
     // 
 }
 
