@@ -20,6 +20,8 @@ PROGRAM		= program
 # List of cpp source file path
 SRCS		= main.cpp\
 			setting.cpp\
+			src/Initialization/initialization.cpp \
+			src/Saving/save_data.cpp \
 			src/LSMPS/LSMPSa.cpp \
 			src/LSMPS/LSMPSb.cpp \
 			# src/geometry/generateBody.cpp	\

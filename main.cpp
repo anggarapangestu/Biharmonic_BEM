@@ -2,12 +2,14 @@
 #include <vector>
 #include <math.h>
 #include "matrixOp.hpp"
+#include "variable.hpp"
 #include "setting.hpp"
 
 int main(){
-    // The code lies here
+    // Initialize the storage data for boundary and internal element
+    element PanelElement;
+    internalElement InternalNode;
 
-    std::cout << "HELLO, this is the first line \n";
     // INITIALIZATION
     // (1) Element Generation (Internal and Boundary)
     // (2) Boundary Value Calculation (traction & displacement)
