@@ -24,8 +24,8 @@ namespace Par{
     const int opt_size = 1;
     
     const bool flag_save_log = true;  // [FLAG] Save simulation log
-    const bool flag_a;
-    const bool flag_b;
+    const bool flag_a = true;
+    const bool flag_b = true;
 
 // #==================================================#
 // +--------------- [PROGRAM PARAMETER] --------------+
@@ -57,14 +57,14 @@ namespace Par{
     */
 
     // Initialization Parameter
-    const double traction_1;
-    const double traction_2;
-    const double traction_3;
-    const double traction_4;
+    const double traction_1 = 1.0e0;
+    const double traction_2 = 1.0e0;
+    const double traction_3 = 1.0e0;
+    const double traction_4 = 1.0e0;
 
     // Element Parameter
-    const double length = 0.05e0;     // Basic panel length
+    const double len = 0.05e0;     // Basic panel length
 
-    // Element Parameter
-    const double ls;         // Basic panel length
+    // Internal Node Parameter
+    const double spc = 0.03e0;    // Basic panel length
 }

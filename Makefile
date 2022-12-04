@@ -21,9 +21,10 @@ PROGRAM		= program
 SRCS		= main.cpp\
 			setting.cpp\
 			src/Initialization/initialization.cpp \
+			src/Initialization/init_method.cpp \
 			src/Saving/save_data.cpp \
-			src/LSMPS/LSMPSa.cpp \
-			src/LSMPS/LSMPSb.cpp \
+			# src/LSMPS/LSMPSa.cpp \
+			# src/LSMPS/LSMPSb.cpp \
 			# src/geometry/generateBody.cpp	\
 			# src/geometry/2D_objects_generator.cpp\
 			# src/geometry/3D_objects_generator.cpp\

@@ -67,11 +67,11 @@ namespace Par{
     const extern double traction_3;
     const extern double traction_4;
 
-    // Element Parameter
-    const extern double length;     // Basic panel length
+    // Panel Element Parameter
+    const extern double len;     // Basic panel length
 
-    // Element Parameter
-    const extern double ls;         // Basic panel length
+    // Internal Node Parameter
+    const extern double spc;    // Basic panel length
 }
 
 #endif

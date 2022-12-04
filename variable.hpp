@@ -1,3 +1,5 @@
+#ifndef INCLUDE_VARIABLE
+#define INCLUDE_VARIABLE
 #include "setting.hpp"
 
 // Boundary Element class: Store the property data of each boundary element
@@ -59,6 +61,8 @@ public:
     std::vector<double> u;      // Displacement in x direction
     std::vector<double> v;      // Displacement in y direction
 };
+
+#endif
 
 /* DATA STORAGE
     - Geometry

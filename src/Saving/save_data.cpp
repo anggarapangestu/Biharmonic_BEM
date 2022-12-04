@@ -40,7 +40,7 @@ void dataSaving::simulation_log(){
 	if (Par::flag_save_log == false){return;}
 	
 	// open the write file
-	this->save.open("output/Log.dat");
+	this->save.open("output/simulation_log.dat");
 	this->save << "#=================================================#\n"
                << "+---------------- SIMULATION LOG -----------------+\n"
                << "#=================================================#\n\n";

@@ -1,14 +1,38 @@
-#include <iostream>
-#include <vector>
-#include <math.h>
-#include "matrixOp.hpp"
+#ifndef INCLUDE_VARIABLE
 #include "variable.hpp"
+#endif
+
+#ifndef SETTINGs
 #include "setting.hpp"
+#endif
+
+#ifndef INITIALIZATION
+#include "src/Initialization/initialization.hpp"
+#endif
+
+#ifndef SAVE_DATA
+#include "src/Saving/save_data.hpp"
+#endif
+
+#include "matrixOp.hpp"
 
 int main(){
     // Initialize the storage data for boundary and internal element
     element PanelElement;
-    internalElement InternalNode;
+    intElement InternalNode;
+    
+    // Initialize the method
+    initialization init;
+    dataSaving save;
+
+    // Initialization generate the element
+    init.generate_boundary_element(PanelElement);
+    init.generate_internal_node(InternalNode, PanelElement);
+
+    // Write the element data
+    save.simulation_log();
+    save.write_internal_data(InternalNode);
+    save.write_BEM_data(PanelElement);
 
     // INITIALIZATION
     // (1) Element Generation (Internal and Boundary)
