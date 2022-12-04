@@ -41,6 +41,7 @@ public:
     // Midpoint position (x,y)
     std::vector<double> x;      // Midpoint x coordinate
     std::vector<double> y;      // Midpoint y coordinate
+    std::vector<double> R;      // Distance to nearest panel
 
     // Boundary condition Dirichet and Neumann
     std::vector<double> phi;      // Airy stress function (phi)

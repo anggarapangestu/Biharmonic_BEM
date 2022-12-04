@@ -105,11 +105,6 @@ void initialization::generate_boundary_element(element& elm){
         _id++;
     }
 
-    // DEBUGGING
-    if (_id!=num){
-        std::cout << "[DEBUG] There must be something wrong!\n";
-    }
-
     // Resize the other variable and set as 0.0
     elm.F.resize(num,0.0e0);
     elm.p.resize(num,0.0e0);

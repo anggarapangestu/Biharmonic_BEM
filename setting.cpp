@@ -66,5 +66,5 @@ namespace Par{
     const double len = 0.05e0;     // Basic panel length
 
     // Internal Node Parameter
-    const double spc = 0.03e0;    // Basic panel length
+    const double spc = 0.1e0;    // Basic panel length
 }

@@ -99,26 +99,28 @@ void dataSaving::write_internal_data(const intElement& intElm){
     // write the data header
 	this->save << "" << "x" 
                << "," << "y"
-               << "," << "phi"
-               << "," << "sigma_xx"
-               << "," << "sigma_yy" 
-               << "," << "tau_xy" 
-               << "," << "epsilon_xx" 
-               << "," << "epsilon_yy"
-               << "," << "epsilon_xy"
+               << "," << "R"
+            //    << "," << "phi"
+            //    << "," << "sigma_xx"
+            //    << "," << "sigma_yy" 
+            //    << "," << "tau_xy" 
+            //    << "," << "epsilon_xx" 
+            //    << "," << "epsilon_yy"
+            //    << "," << "epsilon_xy"
                << "\n";
 
 	// write each node data
     for (int i = 0; i < intElm.num; i++){
         this->save << "" << intElm.x[i]
                    << "," << intElm.y[i]
-                   << "," << intElm.phi[i]
-                   << "," << intElm.s_xx[i]
-                   << "," << intElm.s_yy[i]
-                   << "," << intElm.t_xy[i]
-                   << "," << intElm.e_xx[i]
-                   << "," << intElm.e_yy[i]
-                   << "," << intElm.e_xy[i]
+                   << "," << intElm.R[i]
+                //    << "," << intElm.phi[i]
+                //    << "," << intElm.s_xx[i]
+                //    << "," << intElm.s_yy[i]
+                //    << "," << intElm.t_xy[i]
+                //    << "," << intElm.e_xx[i]
+                //    << "," << intElm.e_yy[i]
+                //    << "," << intElm.e_xy[i]
                    << "\n";
 	}
     
