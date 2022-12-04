@@ -1,7 +1,7 @@
 #ifndef Matrix_Operation
 #define Matrix_Operation
 
-#include "Eigen/Sparse"
+#include "src/Eigen/Sparse"
 #include <vector>
 
 class MatrixOp{
