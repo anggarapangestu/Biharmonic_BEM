@@ -87,19 +87,18 @@ void dataSaving::simulation_log(){
 // Method to write the internal data properties
 void dataSaving::write_internal_data(const intElement& intElm){
 	// saving starting log
-    printf("\nSaving the particle state ...\n");
+    printf("\nSaving the internal node data ...\n");
     
     // write file name
 	std::string name;
 		
 	// open the write file
 	name.append("output/internal_node_data.csv");
-	name.append(".csv");
 	this->save.open(name.c_str());
 
     // write the data header
-	this->save << "" << "xp" 
-               << "," << "yp"
+	this->save << "" << "x" 
+               << "," << "y"
                << "," << "phi"
                << "," << "sigma_xx"
                << "," << "sigma_yy" 
@@ -129,5 +128,42 @@ void dataSaving::write_internal_data(const intElement& intElm){
 
 // Method to write the boundary element data
 void dataSaving::write_BEM_data(const element& elm){
-    // A command
+    // saving starting log
+    printf("\nSaving the boundary element data ...\n");
+    
+    // write file name
+	std::string name;
+		
+	// open the write file
+	name.append("output/boundary_panel_data.csv");
+	this->save.open(name.c_str());
+
+    // write the data header
+	this->save << "" << "xm" 
+               << "," << "ym"
+               << "," << "length"
+               << "," << "xnormal"
+               << "," << "ynormal"
+               << "," << "F"
+               << "," << "phi" 
+               << "," << "dF_dn" 
+               << "," << "dphi_dn" 
+               << "\n";
+
+	// write each node data
+    for (int i = 0; i < elm.num; i++){
+        this->save << "" << elm.xm[i]
+                   << "," << elm.ym[i]
+                   << "," << elm.L[i]
+                   << "," << elm.xn[i]
+                   << "," << elm.yn[i]
+                   << "," << elm.F[i]
+                   << "," << elm.p[i]
+                   << "," << elm.dFdn[i]
+                   << "," << elm.dpdn[i]
+                   << "\n";
+	}
+    
+    // close the write file
+	this->save.close();
 }
