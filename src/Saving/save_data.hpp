@@ -1,7 +1,7 @@
 #ifndef SAVE_DATA
 #define SAVE_DATA
 #include "../../variable.hpp"
-#include <iomanip> // std::setw, std::setfill
+#include <iomanip>
 #include <fstream>
 #include <string>
 

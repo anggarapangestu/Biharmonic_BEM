@@ -23,6 +23,8 @@ SRCS		= main.cpp\
 			src/Initialization/initialization.cpp \
 			src/Initialization/init_method.cpp \
 			src/Saving/save_data.cpp \
+			src/BEM/BEM.cpp \
+			src/BEM/BEM_utils.cpp \
 			# src/LSMPS/LSMPSa.cpp \
 			# src/LSMPS/LSMPSb.cpp \
 			# src/geometry/generateBody.cpp	\
@@ -83,4 +85,4 @@ delete:
 
 
 # github link 	:= https://github.com/anggarapangestu/NEW_VPM.git
-# token 		:= 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
+# token 		:= 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

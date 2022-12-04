@@ -14,8 +14,6 @@
 #include "src/Saving/save_data.hpp"
 #endif
 
-#include "matrixOp.hpp"
-
 int main(){
     // Initialize the storage data for boundary and internal element
     element PanelElement;
@@ -28,6 +26,9 @@ int main(){
     // Initialization generate the element
     init.generate_boundary_element(PanelElement);
     init.generate_internal_node(InternalNode, PanelElement);
+
+    // Calculate the initial condition
+    init.calculate_initial_condition(PanelElement);
 
     // Write the element data
     save.simulation_log();

@@ -12,19 +12,7 @@ public:
     // The class public method belong here
     void generate_internal_node(intElement& intElm, const element& elm);
     void generate_boundary_element(element& elm);
+    void calculate_initial_condition(element& elm);
 };
 
 #endif
-
-/*
-
-class className
-{
-private:
-    // The class private method belong here
-public:
-    // The class public method belong here
-};
-
-*/
-

@@ -8,9 +8,10 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
     // Procedure: \
        1. Generate the regular node distribution \
        2. Eleminate the node outside the domain\
-       3. Save the position data into intElm
+       3. Save the position data into intElm\
+       4. Neighbor searching
 
-    // Check the initialization option
+    // Generate the internal particle data
     if (Par::opt_int_init == 1){
         printf("<+> Regular internal node\n");
         this->internal_regular(intElm, elm);
@@ -19,8 +20,11 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
         this->internal_finer_near_panel(intElm, elm);
     }
     
+    // Calculate the neighbor
+    // The code for neighbor evaluation
 }
 
+// ===================================================
 // Generation of boundary panel element
 void initialization::generate_boundary_element(element& elm){
     // initialization generate boundary panel starting log
@@ -110,4 +114,10 @@ void initialization::generate_boundary_element(element& elm){
     elm.p.resize(num,0.0e0);
     elm.dFdn.resize(num,0.0e0);
     elm.dpdn.resize(num,0.0e0);
+}
+
+// ===================================================
+// Calculate the initial condition at each panel
+void initialization::calculate_initial_condition(element& elm){
+    // The code lies here ...
 }
