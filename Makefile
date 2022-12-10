@@ -85,4 +85,4 @@ delete:
 
 
 # github link 	:= https://github.com/anggarapangestu/NEW_VPM.git
-# token 		:= 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
+# token 		:= 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
