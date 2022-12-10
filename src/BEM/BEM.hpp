@@ -2,7 +2,7 @@
 #define BOUNDARY_ELEMENT_CALCULATION
 
 #include "../../variable.hpp"
-#include "../Eigen/Sparse"
+#include "../Eigen/Dense"
 #include <cmath>
 
 class calcBEM

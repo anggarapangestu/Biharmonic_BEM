@@ -23,8 +23,8 @@ SRCS		= main.cpp\
 			src/Initialization/initialization.cpp \
 			src/Initialization/init_method.cpp \
 			src/Saving/save_data.cpp \
-			src/BEM/BEM.cpp \
-			src/BEM/BEM_utils.cpp \
+			# src/BEM/BEM.cpp \
+			# src/BEM/BEM_utils.cpp \
 			# src/LSMPS/LSMPSa.cpp \
 			# src/LSMPS/LSMPSb.cpp \
 			# src/geometry/generateBody.cpp	\
