@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <time.h>
 
 namespace Par{
 // #==================================================#
@@ -124,6 +125,15 @@ namespace Par{
 
     // Neighbor Parameter
     const extern double R_s;      // Support domain factor size
+
+// #==================================================#
+// +------------- [PHYSICAL PROPERTIES] --------------+
+// #==================================================#
+    // Solid properties
+    const extern double E;          // Material elasticity in GPa
+    const extern double nu;         // Material poisson ratio
+    const extern double mu;         // Lame constant (shear modulus)
+    const extern double lambda;     // Lame constant
 }
 
 #endif

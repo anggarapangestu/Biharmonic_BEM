@@ -46,14 +46,14 @@ void initialization::p_val_calc(element& elm, int ID){
         dpdy_node[i+1] = dpdy_node[i] + (dir * elm.L[i] * elm.Tx[i]);
     }
     
-    // Check for the value of final and initial
-    std::cout << "[DEBUGGING] Comparison\n";
-    std::cout << "The initial value: \n";
-    std::cout << " - dpdx init value: " << dpdx_node[0] << std::endl;
-    std::cout << " - dpdy init value: " << dpdy_node[0] << std::endl;
-    std::cout << "\nThe final value: \n";
-    std::cout << " - dpdx final value: " << dpdx_node[dpdx_node.size() - 1] << std::endl;
-    std::cout << " - dpdy final value: " << dpdy_node[dpdy_node.size() - 1] << std::endl;
+    // // Check for the value of final and initial
+    // std::cout << "[DEBUGGING] Comparison\n";
+    // std::cout << "The initial value: \n";
+    // std::cout << " - dpdx init value: " << dpdx_node[0] << std::endl;
+    // std::cout << " - dpdy init value: " << dpdy_node[0] << std::endl;
+    // std::cout << "\nThe final value: \n";
+    // std::cout << " - dpdx final value: " << dpdx_node[dpdx_node.size() - 1] << std::endl;
+    // std::cout << " - dpdy final value: " << dpdy_node[dpdy_node.size() - 1] << std::endl;
 
     // Assign the value of dpdn
     for (int i = 0; i < elm.num; i++){

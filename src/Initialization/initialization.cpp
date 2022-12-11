@@ -4,6 +4,7 @@
 void initialization::generate_internal_node(intElement& intElm, const element& elm, const std::vector<element>& in_elm){
     // initialization generate internal node starting log
     printf("\nGenerate the internal node ...\n");
+    clock_t _time = clock();
 
     // Procedure: \
        1. Generate the regular node distribution \
@@ -22,6 +23,12 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
     
     // Calculate the neighbor
         // CODE for NEIGHBOR EVAL ...
+    
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("<-> Internal node generation\n");
+    printf("    comp. time                         [%f s]\n", (double)_time/CLOCKS_PER_SEC);
+    
 }
 
 // ===================================================
@@ -33,6 +40,7 @@ void initialization::generate_boundary_element(element& elm, std::vector<element
 
     // initialization generate boundary panel starting log
     printf("\nGenerate the base geometry boundary panel ...\n");
+    clock_t _time = clock();
     
     // Generate the base geometry panel element
     if (Par::G_type == 1){
@@ -42,27 +50,35 @@ void initialization::generate_boundary_element(element& elm, std::vector<element
         printf("<+> Circular geometry type\n");
         this->element_circular(elm, -1);
     }
+    printf("<+> Number of element: %d\n", elm.num);
 
-    // initialization generate boundary panel starting log
-    printf("\nGenerate the inner geometry boundary panel ...\n");
 
     // Generate the base geometry panel element
     for (int ID = 0; ID < Par::N_Gin; ID++){
+        // initialization generate boundary panel starting log
+        printf("\nGenerate boundary panel of inner geometry %d ...\n", ID+1);
+
         // Create the panel for each inner geometry
         element innerPanel;
         
         // Create the panel
         if (Par::Gin_type[ID] == 1){
-            printf("<+> Rectangular type for inner geometry %d \n", ID+1);
+            printf("<+> Rectangular geometry type\n");
             this->element_rectangular(innerPanel, ID);
         }else if (Par::Gin_type[ID] == 2){
-            printf("<+> Circular type for inner geometry %d \n", ID+1);
+            printf("<+> Circular geometry type\n");
             this->element_circular(innerPanel, ID);
         }
+        printf("<+> Number of element: %d\n", innerPanel.num);
 
         // Insert the panel into the list
         in_elm.emplace_back(innerPanel);
     }
+
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("\n<-> All boundary element generation \n");
+    printf("    comp. time                         [%f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
 // ===================================================

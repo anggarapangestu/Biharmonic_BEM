@@ -188,7 +188,7 @@ void LSMPSa::calculate_LSMPS(const std::vector<double> &x, const std::vector<dou
         }
 
         // Solve Least Square
-        Eigen::VectorXd MiInv_Bi = Mi.bdcSvd(ComputeThinU | ComputeThinV).solve(bi); // (MAT_SIZE x 1)
+        Eigen::VectorXd MiInv_Bi = Mi.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(bi); // (MAT_SIZE x 1)
         Eigen::VectorXd Dx = Hi * MiInv_Bi;                                          // (MAT_SIZE x 1)
 
         // Assign to private variables

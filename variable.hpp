@@ -33,7 +33,7 @@ public:
     std::vector<double> p;      // Airy stress function  : phi
     std::vector<double> dFdn;   // Airy stress laplacian normal plane derivative
     std::vector<double> dpdn;   // Airy stress function normal plane derivative
-    std::vector<bool> F_type;   // The type of given boundary condition for F (true: neumann, false: dirichlet)
+    std::vector<bool> F_type;   // The type of given boundary condition for F   (true: neumann, false: dirichlet)
     std::vector<bool> p_type;   // The type of given boundary condition for phi (true: neumann, false: dirichlet)
 };
 
@@ -51,6 +51,7 @@ public:
     std::vector<double> x;      // Midpoint x coordinate
     std::vector<double> y;      // Midpoint y coordinate
     std::vector<double> R;      // Distance to nearest panel
+    std::vector<std::vector<int>> ngh_ID;      // ID of neighbor elementDistance to nearest panel
 
     // Boundary condition Dirichet and Neumann
     std::vector<double> phi;      // Airy stress function (phi)

@@ -9,32 +9,31 @@ void dataSaving::simulation_log(){
     std::cout << "#=================================================#\n";
     std::cout << "<!> Computation Message Log\n";
 	
-	// Simulation parameter summary data
-	printf("\n+---------- Simulation Parameters Data -----------+\n");
-	printf("Body option                           :   type %d \n", Par::G_type);
-	printf("Initialization option                 :   type %d \n", Par::opt_int_init);
-	// printf("Neighbor search option                :   type %d \n", Par::opt_neighbor);
-	// printf("Penalization option                   :   type %d \n", Par::opt_pen);
-	// printf("Maximum resolution level              :        %d \n", Par::max_level);
-	// printf("Core size                             : %8.4f m\n", Par::sigma);
-	// printf("Time step                             : %8.4f s\n", Par::dt);
-	// printf("Total simulation time                 : %8.2f s\n", Par::simulation_time);
-	printf("+-------------------------------------------------+\n");
-	
 	// Initial flow parameters summary data
-	printf("\n+------------- Flow Parameters Data --------------+\n");
-	// printf("Reynolds number (RE)           : %10.2f [-]\n", Par::RE);
-	// printf("Freestream velocity (U)        : %10.2f m/s\n", Par::U_inf);
-	// printf("Fluid density (rho)            : %10.2f kg/m^3\n", Par::RHO);
-	// printf("Fluid viscosity (nu)           : %10f m^2/s\n", Par::NU);
+	printf("\n+-------------- Material Properties --------------+\n");
+	printf("Elasticity (E)                        : %6.2f GPA\n", Par::E/1.0e9);
+	printf("Poisson Ratio (nu)                    : %6.2f [-]\n", Par::nu);
+	printf("Lame's constant mu                    : %6.2f GPA\n", Par::mu/1.0e9);
+	printf("Lame's constant lambda                : %6.2f GPA\n", Par::lambda/1.0e9);
+	printf("+-------------------------------------------------+\n");
+
+    // Simulation parameter summary data
+	printf("\n+---------- Simulation Parameters Data -----------+\n");
+	printf("Simulation type (P_Strain / P_Stress) :   type %d \n", Par::opt_sim_type);
+    printf("Body option                           :   type %d \n", Par::G_type);
+	printf("Initialization option                 :   type %d \n", Par::opt_int_init);
+    printf("Saving option                         :   type %d \n", Par::opt_saving);
+	// printf("Neighbor search option                :   type %d \n", Par::opt_neighbor);
+	// printf("Maximum resolution level              :        %d \n", Par::max_level);
+	printf("Base internal node spacing            : %8.4f m\n", Par::spc);
+    printf("Base panel length                     : %8.4f m\n", Par::len);
 	printf("+-------------------------------------------------+\n");
 
 	// Additional calculation data
 	printf("\n+---------------- Additional Data ----------------+\n");
-	// printf("Courant number (C)                  : %12f \n", Par::Courant);
-	// printf("Diffusion number (Phi)              : %12f \n", Par::Diffusion);
-	// printf("Turbulent scaling                   : %12f \n", std::ceil(1.0e0 / Par::Courant));
-	// printf("Maximum time step (Phi criteria)    : %12f \n", 0.25*Par::sigma*Par::sigma/Par::NU);
+	printf("Number of boundary surface            : %8d \n", Par::N_Gin + 1);
+    printf("Support domain radius factor          : %8.2f \n", Par::R_s);
+	// printf("Turbulent scaling                     : %12f \n", std::ceil(1.0e0 / Par::Courant));
 	printf("+-------------------------------------------------+\n");
 
     // Cancel the saving procedure if flag is closed
@@ -46,36 +45,31 @@ void dataSaving::simulation_log(){
                << "+---------------- SIMULATION LOG -----------------+\n"
                << "#=================================================#\n\n";
 	
-	this->save << "+----------- Simulation Flow Parameter -----------+\n";
+	this->save << "+-------------- Material Properties --------------+\n";
 	this->save << std::fixed << std::setprecision(2)
-               //  << "Reynolds number (RE)             : "; save.width(8); save << std::right << Par::RE    << " [-]" << "\n"
-               //  << "Freestream velocity (U)          : "; save.width(8); save << std::right << Par::u_inf << " m/s"<< "\n"
+               << "Elasticity (E)                        : "; save.width(6); save << std::right << Par::E/1.0e9  << " GPa\n"
+               << "Poisson Ratio (nu)                    : "; save.width(6); save << std::right << Par::nu << " [-]\n"
+               << "Lame's constant mu                    : "; save.width(6); save << std::right << Par::mu/1.0e9 << " GPa\n"
+               << "Lame's constant lambda                : "; save.width(6); save << std::right << Par::lambda/1.0e9 << " GPa\n"
                << "+-------------------------------------------------+\n\n"
                ;
 
 	this->save << "+----------- Simulation Setting Option -----------+\n"
+               << "Simulation type (P_Strain / P_Stress)   : " << "type " << Par::opt_sim_type << "\n"
                << "Body option                             : " << "type " << Par::G_type << "\n"
                << "Initialization option                   : " << "type " << Par::opt_int_init << "\n"
+               << "Saving option                           : " << "type " << Par::opt_saving << "\n"
                //  << "Neighbor search option                  : " << "type " << Par::opt_neighbor << "\n"
-               //  << "Penalization option                     : " << "type " << Par::opt_pen << "\n"
                ;
 	this->save << std::fixed << std::setprecision(4)
-               //  << "Number of save data                     : "; save.width(6); save << std::right << Par::nt_data << "\n"
-               //  << "Saving step interval                    : "; save.width(6); save << std::right << Par::step_inv << "\n"
-               //  << "Core size                               : "; save.width(6); save << std::right << Par::sigma << " m\n"
-               //  << "Time step                               : "; save.width(6); save << std::right << Par::dt << " s\n"
-               ;
-	this->save << std::fixed << std::setprecision(2)
-               //  << "Total simulation time                   : "; save.width(6); save << std::right << Par::simulation_time << " s\n"
+               << "Base internal node spacing              : "; save.width(6); save << std::right << Par::spc << " m\n"
+               << "Base panel length                       : "; save.width(6); save << std::right << Par::len << " m\n"
                << "+-------------------------------------------------+\n\n"
                ;
 
-	this->save << "+----------- Simulation Parameter Data -----------+\n"
-               //  << "Domain x length                       : "; save.width(8); save << std::right << Par::lxdom << " m\n"
-               //  << "Domain y length                       : "; save.width(8); save << std::right << Par::lydom << " m\n"
-               ;
-	this->save << std::fixed << std::setprecision(4)
-               //  << "Courant number (C)                    : "; save.width(8); save << std::right << Par::Courant << "\n"
+	this->save << "+---------------- Additional Data ----------------+\n"
+               << "Number of boundary surface              : "; save.width(6); save << std::right << Par::N_Gin + 1 << "\n"
+               << "Support domain radius factor            : "; save.width(6); save << std::right << Par::R_s << "\n"
                << "+-------------------------------------------------+\n\n"
                ;
 	
@@ -101,7 +95,7 @@ void dataSaving::write_internal_data(const intElement& intElm){
 	this->save << "" << "x" 
                << "," << "y"
                << "," << "R"
-            //    << "," << "phi"
+               << "," << "phi"
             //    << "," << "sigma_xx"
             //    << "," << "sigma_yy" 
             //    << "," << "tau_xy" 
@@ -117,7 +111,7 @@ void dataSaving::write_internal_data(const intElement& intElm){
         this->save << "" << intElm.x[i]
                    << "," << intElm.y[i]
                    << "," << intElm.R[i]
-                //    << "," << intElm.phi[i]
+                   << "," << intElm.phi[i]
                 //    << "," << intElm.s_xx[i]
                 //    << "," << intElm.s_yy[i]
                 //    << "," << intElm.t_xy[i]

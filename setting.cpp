@@ -119,4 +119,13 @@ namespace Par{
 
     // Neighbor Parameter
     const double R_s = 3.5e0;          // Support domain factor size
+
+// #==================================================#
+// +------------- [PHYSICAL PROPERTIES] --------------+
+// #==================================================#
+    // Solid properties
+    const double E = 69.0e9;    // Material elasticity in GPa
+    const double nu = 0.3;      // Material poisson ratio
+    const double mu = (0.5 * E) / (1 + nu);         // Lame constant (shear modulus)
+    const double lambda = (2*mu*nu) / (1 - 2*nu);   // Lame constant
 }

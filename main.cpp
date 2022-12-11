@@ -14,6 +14,10 @@
 #include "src/Saving/save_data.hpp"
 #endif
 
+#ifndef BOUNDARY_ELEMENT_CALCULATION
+#include "src/BEM/BEM.hpp"
+#endif
+
 int main(){
     /* The CODE PROCEDURE
         INITIALIZATION
@@ -42,40 +46,91 @@ int main(){
     
     // Initialize the method
     initialization init;
+    calcBEM BEMstep;
     dataSaving save;
 
     // Print simulation log
     save.simulation_log();
 
+
     // ============================
     // ====== INITIALIZATION ======
     // ============================
+    // Initialization HEADER
+    std::cout << std::endl;
+    std::cout << "#=================================================#\n";
+    std::cout << "+---------------- INITIALIZATION -----------------+\n";
+    std::cout << "#=================================================#\n";
+
     // Initialization generate the panel element and intenral node
     init.generate_boundary_element(PanelElement, InnerElement);
     init.generate_internal_node(InternalNode, PanelElement, InnerElement);
 
     // Calculate the boundary value
     init.calculate_boundary_condition(PanelElement, InnerElement);
-
+    
+    
     // ===============================
     // ======= BEM CALCULATION =======
     // ===============================
+    // BEM calculation HEADER
+    std::cout << std::endl;
+    std::cout << "#=================================================#\n";
+    std::cout << "+---------------- BEM SOLVER LOG -----------------+\n";
+    std::cout << "#=================================================#\n";
+    
+    // Initialize the BEM paramter
+    BEMstep.Define_BEM(PanelElement, InnerElement);
+
     // Calculate the other boundary element value
-    // -> LAPLACE
-    // -> POISSON
+    BEMstep.solve_F(PanelElement, InnerElement);
+    BEMstep.solve_phi(PanelElement, InnerElement);
 
     // Calculate the phi value at the internal domain node
-    // -> INTERNAL PHI
+    BEMstep.calculate_internal_phi(InternalNode, PanelElement, InnerElement);
+
+/*
+    Eigen::MatrixXd A = Eigen::MatrixXd::Zero(3,3);
+    Eigen::MatrixXd B = Eigen::MatrixXd::Zero(3,3);
+    for (int i = 0; i < A.rows(); i++){
+        for (int j = 0; j < A.cols(); j++){
+            A(i, j) = 1+i+j;
+            B(i, j) = 7+j+i*2;
+        }
+    }
+    std::cout << A << std::endl;
+    std::cout << B << std::endl;
+    
+    double _temp;
+    int col = 1;
+    for (int i = 0; i < A.rows(); i++){
+        _temp = A(i,col);
+        A(i,col) = B(i,col);
+        B(i,col) = _temp;
+    }
+
+    std::cout << A << std::endl;
+    std::cout << B << std::endl;
+*/
 
     // =======================================
     // ======= CALCULATING PROPERTIES ========
     // =======================================
+    // BEM calculation HEADER
+    std::cout << std::endl;
+    std::cout << "#=================================================#\n";
+    std::cout << "+------------ PROPERTIES CALCULATION -------------+\n";
+    std::cout << "#=================================================#\n";
     // Calculate all properties at the domain
     // -> PROPERTY CALCULATION
     
+
     // ============================
     // ======= SAVING DATA ========
     // ============================
+    // Write file HEADER
+    std::cout << std::endl;
+    std::cout << "+---------------- SAVING DATA LOG ----------------+\n";
     // Write the element data
     save.write_internal_data(InternalNode);
     save.write_BEM_data(PanelElement, InnerElement);
