@@ -73,39 +73,39 @@ namespace Par{
     const double dom_Ly = 4.0e0;    // Base geometry y length
     
     // Traction Parameter for Rectangular geometry\
-       -> traction is constant along the surface
+       -> traction is constant along the surface (in Pascal)
     // Bottom surface
-    const double trac_b_x = 0.0e6;
-    const double trac_b_y = -1.0e6;
+    const double trac_b_x = 0.0e3;
+    const double trac_b_y = -1.0e3;
     // Right surface
-    const double trac_r_x = 1.0e6;
-    const double trac_r_y = 0.0e6;
+    const double trac_r_x = 1.0e3;
+    const double trac_r_y = 0.0e3;
     // Top surface
-    const double trac_t_x = 0.0e6;
-    const double trac_t_y = 1.0e6;
+    const double trac_t_x = 0.0e3;
+    const double trac_t_y = 1.0e3;
     // Left surface
-    const double trac_l_x = -1.0e6;
-    const double trac_l_y = 0.0e6;
+    const double trac_l_x = -1.0e3;
+    const double trac_l_y = 0.0e3;
 
     // Traction Parameter for Circular geometry\
        -> traction is only a pressure
-    const double trac_press = 0.0e0;
+    const double trac_press = 1.0e3;
 
     // Parameter of Geometry inside Domain
     // ***********************************
     const int N_Gin = 0;        // Number of geometry inside the domain (multiply connected)
 
     // Parameter List of Geometry Inside the Domain 
-    const std::vector<int> Gin_type = {2, 1};   // Type of geometry: \
+    const std::vector<int> Gin_type = {2, 1, 2};   // Type of geometry: \
                                                     * 1 := Rectangular\
                                                     * 2 := Circular/Oval
-    const std::vector<double> Gin_Xlen = {2.0e0, 0.5e0};        // Geometry length in x direction
-    const std::vector<double> Gin_Ylen = {1.0e0, 0.5e0};        // Geometry length in y direction
-    const std::vector<double> Gin_Xcen_pos = {0.0e0, 2.0e0};    // Geometry center x position
-    const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0};    // Geometry center y position
-    const std::vector<double> Gin_Rot = {30.0e0, 45.0e0};         // Geometry rotation in CCW direction (in degree)
-    const std::vector<double> In_pressure = {0.0e0, 0.0e0};     // The value of internal pressure\
-                                                                    -> Traction for internal boundary still limited to internal pressure
+    const std::vector<double> Gin_Xlen = {2.0e0, 0.5e0, 0.5e0};        // Geometry length in x direction
+    const std::vector<double> Gin_Ylen = {1.0e0, 0.5e0, 0.5e0};        // Geometry length in y direction
+    const std::vector<double> Gin_Xcen_pos = {0.0e0, 2.0e0, -0.5e0};   // Geometry center x position
+    const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0, -0.5e0};   // Geometry center y position
+    const std::vector<double> Gin_Rot = {30.0e0, 45.0e0, 50.0e0};      // Geometry rotation in CCW direction (in degree)
+    const std::vector<double> In_pressure = {0.0e0, 0.0e0, 0.0e0};     // The value of internal pressure\
+                                                                           -> Traction for internal boundary still limited to internal pressure
 
 // #==================================================#
 // +------------- [SIMULATION PARAMETER] -------------+

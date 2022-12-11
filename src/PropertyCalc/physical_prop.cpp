@@ -1,4 +1,5 @@
 #include "physical_prop.hpp"
+#include <fstream>
 
 void propertyCalc::calculate_property(intElement& intNode){
     // Calculate the stresses
@@ -56,6 +57,28 @@ void propertyCalc::calculate_stress(intElement& intNode){
 
     // Evaluate the neigbor
 	std::vector<std::vector<int>> ngh_ID = this->neighEval.link_list(intNode.num, intNode.x, intNode.y, Par::R_s);
+
+    // open the write file
+    std::ofstream save;
+	save.open("output/neighbor_dat.csv");
+
+    // write the data header
+	save << "" << "x" 
+         << "," << "y"
+         << "," << "ngh"
+         << "\n";
+
+	// write each node data
+    for (int i = 0; i < intNode.num; i++){
+        save << "" << intNode.x[i]
+             << "," << intNode.y[i] << ",";
+        
+        for (auto val:ngh_ID[i]){
+            save << val << ";";
+        }
+
+        save<< "\n";
+	}
 	
 	// Performing LSMPS calculation
 	lsmpsa_phi.set_LSMPS(intNode.x, intNode.y, intNode.s, intNode.phi, ngh_ID);
