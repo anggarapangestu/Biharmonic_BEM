@@ -1,5 +1,7 @@
 #include "initialization.hpp"
 
+// ==================================================================================
+// ==================================================================================
 // Boundary element initialization for rectangular geometry
 void initialization::element_rectangular(element& elm, int ID){
     // Procedure: \
@@ -277,6 +279,8 @@ void initialization::element_rectangular(element& elm, int ID){
 
 }
 
+// ==================================================================================
+// ==================================================================================
 // Boundary element initialization for circular geometry
 void initialization::element_circular(element& elm, int ID){
     // Procedure: \

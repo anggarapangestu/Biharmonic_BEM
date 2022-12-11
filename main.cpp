@@ -15,6 +15,26 @@
 #endif
 
 int main(){
+    /* The CODE PROCEDURE
+        INITIALIZATION
+        (1) Element Generation (Internal and Boundary)
+        (2) Boundary Value Calculation (traction & displacement)
+        (3) Matrix Built Up
+
+        SOLVER
+        (1) Solving Laplace of F
+        (2) Solving Poison of phi
+
+        POST PROCESSING
+        (1) Calculate the phi inside domain
+        (2) Calculate the properties (sigma_x, sigma_y, tau_xy, u, v, ...) inside domain
+        (3) Write Data
+    */
+    
+    // ======================================
+    // ====== INTERNAL VARIABLE REGION ======
+    // ======================================
+
     // Initialize the storage data for boundary and internal element
     element PanelElement;
     std::vector<element> InnerElement;
@@ -24,31 +44,41 @@ int main(){
     initialization init;
     dataSaving save;
 
-    // Initialization generate the element
+    // Print simulation log
+    save.simulation_log();
+
+    // ============================
+    // ====== INITIALIZATION ======
+    // ============================
+    // Initialization generate the panel element and intenral node
     init.generate_boundary_element(PanelElement, InnerElement);
     init.generate_internal_node(InternalNode, PanelElement, InnerElement);
 
-    // // Calculate the initial condition
-    // init.calculate_initial_condition(PanelElement);
+    // Calculate the boundary value
+    init.calculate_boundary_condition(PanelElement, InnerElement);
 
+    // ===============================
+    // ======= BEM CALCULATION =======
+    // ===============================
+    // Calculate the other boundary element value
+    // -> LAPLACE
+    // -> POISSON
+
+    // Calculate the phi value at the internal domain node
+    // -> INTERNAL PHI
+
+    // =======================================
+    // ======= CALCULATING PROPERTIES ========
+    // =======================================
+    // Calculate all properties at the domain
+    // -> PROPERTY CALCULATION
+    
+    // ============================
+    // ======= SAVING DATA ========
+    // ============================
     // Write the element data
-    save.simulation_log();
     save.write_internal_data(InternalNode);
     save.write_BEM_data(PanelElement, InnerElement);
-
-    // INITIALIZATION
-    // (1) Element Generation (Internal and Boundary)
-    // (2) Boundary Value Calculation (traction & displacement)
-    // (3) Matrix Built Up
-
-    // SOLVER
-    // (1) Solving Laplace of F
-    // (2) Solving Poison of phi
-
-    // POST PROCESSING
-    // (1) Calculate the phi inside domain
-    // (2) Calculate the properties (sigma_x, sigma_y, tau_xy, u, v, ...) inside domain
-    // (3) Write Data
 
     return 0;
 }

@@ -116,4 +116,7 @@ namespace Par{
     // Internal Node Parameter
     const double spc = 0.1e0;      // Internal node spacing
     const double dist_fac = 4.0e0; // The spacing factor of finer region
+
+    // Neighbor Parameter
+    const double R_s = 3.5e0;          // Support domain factor size
 }

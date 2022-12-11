@@ -33,6 +33,8 @@ public:
     std::vector<double> p;      // Airy stress function  : phi
     std::vector<double> dFdn;   // Airy stress laplacian normal plane derivative
     std::vector<double> dpdn;   // Airy stress function normal plane derivative
+    std::vector<bool> F_type;   // The type of given boundary condition for F (true: neumann, false: dirichlet)
+    std::vector<bool> p_type;   // The type of given boundary condition for phi (true: neumann, false: dirichlet)
 };
 
 // Internal Element class: Store the property data of each node inside the domain

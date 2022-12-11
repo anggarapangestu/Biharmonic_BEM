@@ -68,5 +68,28 @@ void initialization::generate_boundary_element(element& elm, std::vector<element
 // ===================================================
 // Calculate the boundary condition at each panel
 void initialization::calculate_boundary_condition(element& elm, std::vector<element>& in_elm){
-    // The code lies here ...
+    // Calculate the boundary condition for \
+       1. Base geometry element and \
+       2. Inner domain geometry element
+
+    // initialization generate boundary panel starting log
+    printf("\nCalculating boundary condition for base panel ...\n");
+    
+    // Generate the base geometry panel element
+    printf("<+> Calculate dFdn value\n");
+    this->element_rectangular(elm, -1);
+    printf("<+> Calculate dpdn value\n");
+    this->element_rectangular(elm, -1);
+
+    // initialization generate boundary panel starting log
+    printf("\nCalculating boundary condition for inner panel ...\n");
+
+    // Generate the base geometry panel element
+    for (int ID = 0; ID < Par::N_Gin; ID++){
+        // Generate the base geometry panel element
+        printf("<+> Calculate dFdn for inner geometry %d \n", ID+1);
+        this->element_rectangular(elm, -1);
+        printf("<+> Calculate dpdn for inner geometry %d \n", ID+1);
+        this->element_rectangular(elm, -1);
+    }
 }
