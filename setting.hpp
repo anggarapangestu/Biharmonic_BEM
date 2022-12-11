@@ -116,10 +116,11 @@ namespace Par{
 // +------------- [SIMULATION PARAMETER] -------------+
 // #==================================================#
     // Panel Element Parameter
-    const extern double len;     // Panel length
+    const extern double len;      // Panel length
 
     // Internal Node Parameter
-    const extern double spc;     // Internal node spacing
+    const extern double spc;      // Internal node spacing
+    const extern double dist_fac; // The spacing factor of finer region
 }
 
 #endif

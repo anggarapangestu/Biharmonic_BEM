@@ -10,8 +10,8 @@ class initialization
 private:
     // The class private method belong here
     // Internal node generation
-    void internal_regular(intElement& intElm, const element& elm);
-    void internal_finer_near_panel(intElement& intElm, const element& elm);
+    void internal_regular(intElement& intElm, const element& elm, const std::vector<element>& in_elm);
+    void internal_finer_near_panel(intElement& intElm, const element& elm, const std::vector<element>& in_elm);
 
     // Boundary element generation
     void element_rectangular(element& elm, int ID);

@@ -114,5 +114,6 @@ namespace Par{
     const double len = 0.08e0;     // Panel length
 
     // Internal Node Parameter
-    const double spc = 0.1e0;     // Internal node spacing
+    const double spc = 0.1e0;      // Internal node spacing
+    const double dist_fac = 4.0e0; // The spacing factor of finer region
 }

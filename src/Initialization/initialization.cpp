@@ -14,14 +14,14 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
     // Generate the internal particle data
     if (Par::opt_int_init == 1){
         printf("<+> Regular internal node\n");
-        this->internal_regular(intElm, elm);
+        this->internal_regular(intElm, elm, in_elm);
     }else if (Par::opt_int_init == 2){
         printf("<+> Finer near panel internal node\n");
-        this->internal_finer_near_panel(intElm, elm);
+        this->internal_finer_near_panel(intElm, elm, in_elm);
     }
     
     // Calculate the neighbor
-    // The code for neighbor evaluation
+        // CODE for NEIGHBOR EVAL ...
 }
 
 // ===================================================

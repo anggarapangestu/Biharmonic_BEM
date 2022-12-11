@@ -3,6 +3,7 @@
 // Method to display and write the simulation log
 void dataSaving::simulation_log(){
     // Simulation Log Initial Parameter Summary Data
+    std::cout << std::endl;
     std::cout << "#=================================================#\n";
     std::cout << "+---------------- SIMULATION LOG -----------------+\n";
     std::cout << "#=================================================#\n";
@@ -107,6 +108,8 @@ void dataSaving::write_internal_data(const intElement& intElm){
             //    << "," << "epsilon_xx" 
             //    << "," << "epsilon_yy"
             //    << "," << "epsilon_xy"
+            //    << "," << "u"
+            //    << "," << "v"
                << "\n";
 
 	// write each node data
@@ -121,6 +124,8 @@ void dataSaving::write_internal_data(const intElement& intElm){
                 //    << "," << intElm.e_xx[i]
                 //    << "," << intElm.e_yy[i]
                 //    << "," << intElm.e_xy[i]
+                //    << "," << intElm.u[i]
+                //    << "," << intElm.v[i]
                    << "\n";
 	}
     
@@ -148,6 +153,8 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
                << "," << "length"
                << "," << "xnormal"
                << "," << "ynormal"
+               << "," << "Tx"
+               << "," << "Ty" 
             //    << "," << "F"
             //    << "," << "phi" 
             //    << "," << "dF_dn" 
@@ -163,6 +170,8 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
                    << "," << elm.L[i]
                    << "," << elm.xn[i]
                    << "," << elm.yn[i]
+                   << "," << elm.Tx[i]
+                   << "," << elm.Ty[i]
                 //    << "," << elm.F[i]
                 //    << "," << elm.p[i]
                 //    << "," << elm.dFdn[i]
@@ -178,6 +187,8 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
                     << "," << in_elm[ID].L[i]
                     << "," << in_elm[ID].xn[i]
                     << "," << in_elm[ID].yn[i]
+                    << "," << in_elm[ID].Tx[i]
+                    << "," << in_elm[ID].Ty[i]
                     // << "," << in_elm[ID].F[i]
                     // << "," << in_elm[ID].p[i]
                     // << "," << in_elm[ID].dFdn[i]
