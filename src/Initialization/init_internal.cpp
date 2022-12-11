@@ -16,6 +16,7 @@ void initialization::internal_regular(intElement& intElm, const element& elm, co
     double min[2] = {0, 0};     // Store the minimum position of x and y respectively
     std::vector<double> x_pos;  // Temporary x_variable
     std::vector<double> y_pos;  // Temporary y_variable
+    std::vector<double> _size;  // Temporary spacing size
     std::vector<double> R_pos;  // Temporary nearest distance
     std::vector<bool> _assign;  // Temporary flag for assign the node data
     int nx, ny, num, _num;
@@ -42,6 +43,7 @@ void initialization::internal_regular(intElement& intElm, const element& elm, co
     // Allocating the node position
     x_pos.resize(num,0.0e0);
     y_pos.resize(num,0.0e0);
+    _size.resize(num,Par::spc);
     R_pos.resize(num,0.0e0);
     _assign.resize(num,true);
     int _id = 0;
@@ -137,6 +139,7 @@ void initialization::internal_regular(intElement& intElm, const element& elm, co
     // Initialize each internal Element variable
     intElm.x.resize(_num, 0.0e0);
     intElm.y.resize(_num, 0.0e0);
+    intElm.s.resize(_num, 0.0e0);
     intElm.R.resize(_num, 0.0e0);
     intElm.num = _num;
 
@@ -146,6 +149,7 @@ void initialization::internal_regular(intElement& intElm, const element& elm, co
         if(_assign[i] == true){
             intElm.x[_id] = x_pos[i];
             intElm.y[_id] = y_pos[i];
+            intElm.s[_id] = _size[i];
             intElm.R[_id] = R_pos[i];
             _id++;
         }
@@ -170,6 +174,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
     double min[2] = {0, 0};     // Store the minimum position of x and y respectively
     std::vector<double> x_pos;  // Temporary x_variable
     std::vector<double> y_pos;  // Temporary y_variable
+    std::vector<double> _size;  // Temporary internal spacing
     std::vector<double> R_pos;  // Temporary nearest distance
     std::vector<bool> _assign;  // Temporary flag for assign the data into list
     std::vector<bool> _devide;  // Temporary flag for devided element
@@ -197,6 +202,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
     // Allocating the node position
     x_pos.resize(num,0.0e0);
     y_pos.resize(num,0.0e0);
+    _size.resize(num,Par::spc);
     R_pos.resize(num,0.0e0);
     _assign.resize(num,true);
     _devide.resize(num,false);
@@ -272,6 +278,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
                     // If lies inside the domain assign into the new
                     x_pos.push_back(__x);
                     y_pos.push_back(__y);
+                    _size.push_back(Par::spc / 2.0);
                     R_pos.push_back(min_R);
                     _assign.push_back(true);
                     _devide.push_back(true);
@@ -361,6 +368,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
                         // If lies inside the domain assign into the new
                         x_pos.push_back(__x);
                         y_pos.push_back(__y);
+                        _size.push_back(Par::spc / 2.0);
                         R_pos.push_back(min_R);
                         _assign.push_back(true);
                         _devide.push_back(true);
@@ -388,6 +396,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
     // Initialize each internal Element variable
     intElm.x.resize(_num, 0.0e0);
     intElm.y.resize(_num, 0.0e0);
+    intElm.s.resize(_num, 0.0e0);
     intElm.R.resize(_num, 0.0e0);
     intElm.num = _num;
 
@@ -397,6 +406,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
         if(_assign[i] == true){
             intElm.x[_id] = x_pos[i];
             intElm.y[_id] = y_pos[i];
+            intElm.s[_id] = _size[i];
             intElm.R[_id] = R_pos[i];
             _id++;
         }

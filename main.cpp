@@ -18,6 +18,10 @@
 #include "src/BEM/BEM.hpp"
 #endif
 
+#ifndef PHYSICAL_PROPERTIES_CALCULATION
+#include "src/PropertyCalc/physical_prop.hpp"
+#endif
+
 int main(){
     /* The CODE PROCEDURE
         INITIALIZATION
@@ -47,6 +51,7 @@ int main(){
     // Initialize the method
     initialization init;
     calcBEM BEMstep;
+    propertyCalc prop_step;
     dataSaving save;
 
     // Print simulation log
@@ -122,7 +127,7 @@ int main(){
     std::cout << "+------------ PROPERTIES CALCULATION -------------+\n";
     std::cout << "#=================================================#\n";
     // Calculate all properties at the domain
-    // -> PROPERTY CALCULATION
+    prop_step.calculate_property(InternalNode);
     
 
     // ============================

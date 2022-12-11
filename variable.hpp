@@ -50,8 +50,8 @@ public:
     // Midpoint position (x,y)
     std::vector<double> x;      // Midpoint x coordinate
     std::vector<double> y;      // Midpoint y coordinate
+    std::vector<double> s;      // The element spacing size
     std::vector<double> R;      // Distance to nearest panel
-    std::vector<std::vector<int>> ngh_ID;      // ID of neighbor elementDistance to nearest panel
 
     // Boundary condition Dirichet and Neumann
     std::vector<double> phi;      // Airy stress function (phi)

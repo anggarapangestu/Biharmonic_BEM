@@ -20,20 +20,17 @@ PROGRAM		= program
 # List of cpp source file path
 SRCS		= main.cpp\
 			setting.cpp\
-			src/Initialization/initialization.cpp \
-			src/Initialization/init_element.cpp \
-			src/Initialization/init_internal.cpp \
-			src/Initialization/init_assignBC.cpp \
-			src/Saving/save_data.cpp \
-			src/BEM/BEM.cpp \
-			src/BEM/BEM_utils.cpp \
-			# src/LSMPS/LSMPSa.cpp \
-			# src/LSMPS/LSMPSb.cpp \
-			# src/geometry/generateBody.cpp	\
-			# src/geometry/2D_objects_generator.cpp\
-			# src/geometry/3D_objects_generator.cpp\
-			# src/geometry/u_var.cpp \
-			# src/DC_operator/dc_gradient.cpp \
+			src/Initialization/initialization.cpp\
+			src/Initialization/init_element.cpp\
+			src/Initialization/init_internal.cpp\
+			src/Initialization/init_assignBC.cpp\
+			src/Saving/save_data.cpp\
+			src/BEM/BEM.cpp\
+			src/BEM/BEM_utils.cpp\
+			src/LSMPS/LSMPSa.cpp\
+			src/Neighbor/link_list.cpp\
+			src/Neighbor/link_list_utils.cpp\
+			src/PropertyCalc/physical_prop.cpp\
 
 # List of target object file path
 OBJS		= $(SRCS:%.cpp=%.o)            # Change from SRCS the ".cpp" into ".o"

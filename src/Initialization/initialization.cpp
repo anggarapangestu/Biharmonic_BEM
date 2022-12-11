@@ -21,9 +21,6 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
         this->internal_finer_near_panel(intElm, elm, in_elm);
     }
     
-    // Calculate the neighbor
-        // CODE for NEIGHBOR EVAL ...
-    
     // Displaying the computational time
     _time = clock() - _time;
 	printf("<-> Internal node generation\n");

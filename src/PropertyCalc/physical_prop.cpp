@@ -2,22 +2,30 @@
 
 void propertyCalc::calculate_property(intElement& intNode){
     // Calculate the stresses
+    // Initialization stress calculation log
+    printf("\nStress calculation ...\n");
     this->calculate_stress(intNode);
-    if (Par::opt_sim_type == 1){    // Plane strain
+    
+    // Out plane stress calculation (z-direction)
+    if (Par::opt_sim_type == 1){        // Plane strain
         // Calculate the stress at z direction
         intNode.s_zz.resize(intNode.num,0.0e0);
         for (int i = 0; i < intNode.num; i++){
             intNode.s_zz[i] = Par::nu * (intNode.s_xx[i] + intNode.s_yy[i]);
         }
     }
-    else{   // Plane stress
+    else if (Par::opt_sim_type == 2){   // Plane stress
         // No stresses at z direction
     }
 
     // Calculate the strains
+    // Initialization strain calculation log
+    printf("\nStrain calculation ...\n");
     this->calculate_strain(intNode);
 
     // Calculate the displacements
+    // Initialization strain calculation log
+    printf("\nDisplacement calculation ...\n");
     this->calculate_disp(intNode);
 }
 
@@ -25,7 +33,26 @@ void propertyCalc::calculate_property(intElement& intNode){
 // ======================================================================
 // Calculation of stress by using LSMPS
 void propertyCalc::calculate_stress(intElement& intNode){
-    // The main code
+    // Resize the stress properties
+    intNode.s_xx.resize(intNode.num, 0.0e0);
+    intNode.s_yy.resize(intNode.num, 0.0e0);
+    intNode.t_xy.resize(intNode.num, 0.0e0);
+
+    // Evaluate the neigbor
+	std::vector<std::vector<int>> ngh_ID = this->neighEval.link_list(intNode.num, intNode.x, intNode.y, Par::R_s);
+	
+	// Performing LSMPS calculation
+	lsmpsa_phi.set_LSMPS(intNode.x, intNode.y, intNode.s, intNode.phi, ngh_ID);
+	std::vector<double> d2pd2x  = lsmpsa_phi.get_d2d2x();
+	std::vector<double> d2pdxdy = lsmpsa_phi.get_d2dxdy();
+    std::vector<double> d2pd2y  = lsmpsa_phi.get_d2d2y();
+
+    // Assign the stresses value
+    for (int i = 0; i < intNode.num; i++){
+        intNode.s_xx[i] = d2pd2y[i];
+        intNode.s_yy[i] = d2pd2x[i];
+        intNode.t_xy[i] = - d2pdxdy[i];
+    }
 }
 
 void propertyCalc::calculate_strain(intElement& intNode){
@@ -66,5 +93,5 @@ void propertyCalc::calculate_strain(intElement& intNode){
 
 void propertyCalc::calculate_disp(intElement& intNode)
 {
-    // In development
+    // In development ...
 }

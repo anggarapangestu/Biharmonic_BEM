@@ -9,9 +9,15 @@
 #include "../LSMPS/LSMPSa.hpp"
 #endif
 
+#ifndef INCLUDED_NEIGHBOR
+#include "../Neighbor/neighbor.hpp"
+#endif
+
 class propertyCalc
 {
 private:
+    neighbor neighEval;
+    LSMPSa lsmpsa_phi;
     void calculate_stress(intElement& intNode);
     void calculate_strain(intElement& intNode);
     void calculate_disp(intElement& intNode);
