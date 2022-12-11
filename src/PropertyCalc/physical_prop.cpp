@@ -4,6 +4,7 @@ void propertyCalc::calculate_property(intElement& intNode){
     // Calculate the stresses
     // Initialization stress calculation log
     printf("\nStress calculation ...\n");
+    clock_t _time = clock();
     this->calculate_stress(intNode);
     
     // Out plane stress calculation (z-direction)
@@ -18,15 +19,30 @@ void propertyCalc::calculate_property(intElement& intNode){
         // No stresses at z direction
     }
 
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("<-> Stress calculation comp. time      [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+    
     // Calculate the strains
     // Initialization strain calculation log
     printf("\nStrain calculation ...\n");
+    _time = clock();
     this->calculate_strain(intNode);
+    
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("<-> Strain calculation comp. time      [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 
     // Calculate the displacements
     // Initialization strain calculation log
     printf("\nDisplacement calculation ...\n");
+    _time = clock() - _time;
     this->calculate_disp(intNode);
+    
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("<-> Displacement calculation\n");
+    printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
 // ======================================================================

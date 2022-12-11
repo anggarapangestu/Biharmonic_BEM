@@ -95,13 +95,14 @@ void dataSaving::write_internal_data(const intElement& intElm){
 	this->save << "" << "x" 
                << "," << "y"
                << "," << "R"
+               << "," << "s"
                << "," << "phi"
-            //    << "," << "sigma_xx"
-            //    << "," << "sigma_yy" 
-            //    << "," << "tau_xy" 
-            //    << "," << "epsilon_xx" 
-            //    << "," << "epsilon_yy"
-            //    << "," << "epsilon_xy"
+               << "," << "sigma_xx"
+               << "," << "sigma_yy" 
+               << "," << "tau_xy" 
+               << "," << "epsilon_xx" 
+               << "," << "epsilon_yy"
+               << "," << "epsilon_xy"
             //    << "," << "u"
             //    << "," << "v"
                << "\n";
@@ -111,13 +112,14 @@ void dataSaving::write_internal_data(const intElement& intElm){
         this->save << "" << intElm.x[i]
                    << "," << intElm.y[i]
                    << "," << intElm.R[i]
+                   << "," << intElm.s[i]
                    << "," << intElm.phi[i]
-                //    << "," << intElm.s_xx[i]
-                //    << "," << intElm.s_yy[i]
-                //    << "," << intElm.t_xy[i]
-                //    << "," << intElm.e_xx[i]
-                //    << "," << intElm.e_yy[i]
-                //    << "," << intElm.e_xy[i]
+                   << "," << intElm.s_xx[i]
+                   << "," << intElm.s_yy[i]
+                   << "," << intElm.t_xy[i]
+                   << "," << intElm.e_xx[i]
+                   << "," << intElm.e_yy[i]
+                   << "," << intElm.e_xy[i]
                 //    << "," << intElm.u[i]
                 //    << "," << intElm.v[i]
                    << "\n";
@@ -149,10 +151,10 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
                << "," << "ynormal"
                << "," << "Tx"
                << "," << "Ty" 
-            //    << "," << "F"
-            //    << "," << "phi" 
-            //    << "," << "dF_dn" 
-            //    << "," << "dphi_dn" 
+               << "," << "F"
+               << "," << "phi" 
+               << "," << "dF_dn" 
+               << "," << "dphi_dn" 
                << "\n";
 
 	// write each node data
@@ -166,10 +168,10 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
                    << "," << elm.yn[i]
                    << "," << elm.Tx[i]
                    << "," << elm.Ty[i]
-                //    << "," << elm.F[i]
-                //    << "," << elm.p[i]
-                //    << "," << elm.dFdn[i]
-                //    << "," << elm.dpdn[i]
+                   << "," << elm.F[i]
+                   << "," << elm.p[i]
+                   << "," << elm.dFdn[i]
+                   << "," << elm.dpdn[i]
                    << "\n";
 	}
 
@@ -183,10 +185,10 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
                     << "," << in_elm[ID].yn[i]
                     << "," << in_elm[ID].Tx[i]
                     << "," << in_elm[ID].Ty[i]
-                    // << "," << in_elm[ID].F[i]
-                    // << "," << in_elm[ID].p[i]
-                    // << "," << in_elm[ID].dFdn[i]
-                    // << "," << in_elm[ID].dpdn[i]
+                    << "," << in_elm[ID].F[i]
+                    << "," << in_elm[ID].p[i]
+                    << "," << in_elm[ID].dFdn[i]
+                    << "," << in_elm[ID].dpdn[i]
                     << "\n";
         }
     }

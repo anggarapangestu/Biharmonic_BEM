@@ -38,7 +38,7 @@ int main(){
         (2) Calculate the properties (sigma_x, sigma_y, tau_xy, u, v, ...) inside domain
         (3) Write Data
     */
-    
+    clock_t _time = clock();
     // ======================================
     // ====== INTERNAL VARIABLE REGION ======
     // ======================================
@@ -139,6 +139,11 @@ int main(){
     // Write the element data
     save.write_internal_data(InternalNode);
     save.write_BEM_data(PanelElement, InnerElement);
+
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("\nTOTAL COMPUTATIONAL TIME               [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+    printf("\n#============== SIMULATION FINISHED ==============#\n\n");
 
     return 0;
 }

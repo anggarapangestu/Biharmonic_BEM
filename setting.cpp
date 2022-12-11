@@ -9,7 +9,7 @@ namespace Par{
                                     1:= Plane strain,\
                                     2:= Plane stress
 
-    const int opt_int_init = 1;  // The init. opt. for internal node;\
+    const int opt_int_init = 2;  // The init. opt. for internal node;\
                                     1:= Regular,\
                                     2:= Finer near boundary
 
@@ -75,17 +75,17 @@ namespace Par{
     // Traction Parameter for Rectangular geometry\
        -> traction is constant along the surface
     // Bottom surface
-    const double trac_b_x = 0.0e0;
-    const double trac_b_y = -1.0e0;
+    const double trac_b_x = 0.0e6;
+    const double trac_b_y = -1.0e6;
     // Right surface
-    const double trac_r_x = 1.0e0;
-    const double trac_r_y = 0.0e0;
+    const double trac_r_x = 1.0e6;
+    const double trac_r_y = 0.0e6;
     // Top surface
-    const double trac_t_x = 0.0e0;
-    const double trac_t_y = 1.0e0;
+    const double trac_t_x = 0.0e6;
+    const double trac_t_y = 1.0e6;
     // Left surface
-    const double trac_l_x = -1.0e0;
-    const double trac_l_y = 0.0e0;
+    const double trac_l_x = -1.0e6;
+    const double trac_l_y = 0.0e6;
 
     // Traction Parameter for Circular geometry\
        -> traction is only a pressure
@@ -93,7 +93,7 @@ namespace Par{
 
     // Parameter of Geometry inside Domain
     // ***********************************
-    const int N_Gin = 2;        // Number of geometry inside the domain (multiply connected)
+    const int N_Gin = 0;        // Number of geometry inside the domain (multiply connected)
 
     // Parameter List of Geometry Inside the Domain 
     const std::vector<int> Gin_type = {2, 1};   // Type of geometry: \
@@ -111,10 +111,10 @@ namespace Par{
 // +------------- [SIMULATION PARAMETER] -------------+
 // #==================================================#
     // Panel Element Parameter
-    const double len = 0.08e0;     // Panel length
+    const double len = 0.03e0;     // Panel length
 
     // Internal Node Parameter
-    const double spc = 0.1e0;      // Internal node spacing
+    const double spc = 0.08e0;      // Internal node spacing
     const double dist_fac = 4.0e0; // The spacing factor of finer region
 
     // Neighbor Parameter

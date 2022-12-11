@@ -184,7 +184,7 @@ void calcBEM::solve_F(element& elm, std::vector<element>& in_elm){
     
     // Displaying the computational time
     _time = clock() - _time;
-	printf("<-> Calculating F comp. time           [%f s]\n", (double)_time/CLOCKS_PER_SEC);
+	printf("<-> Calculating F comp. time           [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
 // ================================================================================
@@ -340,7 +340,7 @@ void calcBEM::solve_phi(element& elm, std::vector<element>& in_elm){
 
     // Displaying the computational time
     _time = clock() - _time;
-	printf("<-> Calculating phi comp. time         [%f s]\n", (double)_time/CLOCKS_PER_SEC);
+	printf("<-> Calculating phi comp. time         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
 // ================================================================================
@@ -425,5 +425,5 @@ void calcBEM::calculate_internal_phi(intElement& intElm, const element& elm, con
     // Displaying the computational time
     _time = clock() - _time;
 	printf("<-> Internal node phi calculation\n");
-    printf("    comp. time                         [%f s]\n", (double)_time/CLOCKS_PER_SEC);
+    printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }

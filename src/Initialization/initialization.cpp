@@ -20,12 +20,12 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
         printf("<+> Finer near panel internal node\n");
         this->internal_finer_near_panel(intElm, elm, in_elm);
     }
+    printf("<+> Number of element                 : %8d\n", intElm.num);
     
     // Displaying the computational time
     _time = clock() - _time;
 	printf("<-> Internal node generation\n");
-    printf("    comp. time                         [%f s]\n", (double)_time/CLOCKS_PER_SEC);
-    
+    printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
 // ===================================================
@@ -47,7 +47,7 @@ void initialization::generate_boundary_element(element& elm, std::vector<element
         printf("<+> Circular geometry type\n");
         this->element_circular(elm, -1);
     }
-    printf("<+> Number of element: %d\n", elm.num);
+    printf("<+> Number of element                 : %8d\n", elm.num);
 
 
     // Generate the base geometry panel element
@@ -66,7 +66,7 @@ void initialization::generate_boundary_element(element& elm, std::vector<element
             printf("<+> Circular geometry type\n");
             this->element_circular(innerPanel, ID);
         }
-        printf("<+> Number of element: %d\n", innerPanel.num);
+        printf("<+> Number of element                 : %8d\n", innerPanel.num);
 
         // Insert the panel into the list
         in_elm.emplace_back(innerPanel);
@@ -75,7 +75,7 @@ void initialization::generate_boundary_element(element& elm, std::vector<element
     // Displaying the computational time
     _time = clock() - _time;
 	printf("\n<-> All boundary element generation \n");
-    printf("    comp. time                         [%f s]\n", (double)_time/CLOCKS_PER_SEC);
+    printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
 // ===================================================
