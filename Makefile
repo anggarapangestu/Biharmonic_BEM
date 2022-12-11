@@ -21,7 +21,9 @@ PROGRAM		= program
 SRCS		= main.cpp\
 			setting.cpp\
 			src/Initialization/initialization.cpp \
-			src/Initialization/init_method.cpp \
+			src/Initialization/init_element.cpp \
+			src/Initialization/init_internal.cpp \
+			src/Initialization/init_assignBC.cpp \
 			src/Saving/save_data.cpp \
 			# src/BEM/BEM.cpp \
 			# src/BEM/BEM_utils.cpp \

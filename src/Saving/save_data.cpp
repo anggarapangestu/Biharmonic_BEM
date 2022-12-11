@@ -10,7 +10,7 @@ void dataSaving::simulation_log(){
 	
 	// Simulation parameter summary data
 	printf("\n+---------- Simulation Parameters Data -----------+\n");
-	printf("Body option                           :   type %d \n", Par::opt_geom);
+	printf("Body option                           :   type %d \n", Par::G_type);
 	printf("Initialization option                 :   type %d \n", Par::opt_int_init);
 	// printf("Neighbor search option                :   type %d \n", Par::opt_neighbor);
 	// printf("Penalization option                   :   type %d \n", Par::opt_pen);
@@ -53,7 +53,7 @@ void dataSaving::simulation_log(){
                ;
 
 	this->save << "+----------- Simulation Setting Option -----------+\n"
-               << "Body option                             : " << "type " << Par::opt_geom << "\n"
+               << "Body option                             : " << "type " << Par::G_type << "\n"
                << "Initialization option                   : " << "type " << Par::opt_int_init << "\n"
                //  << "Neighbor search option                  : " << "type " << Par::opt_neighbor << "\n"
                //  << "Penalization option                     : " << "type " << Par::opt_pen << "\n"

@@ -1,6 +1,9 @@
 #ifndef INCLUDE_VARIABLE
 #define INCLUDE_VARIABLE
+
+#ifndef SETTINGs
 #include "setting.hpp"
+#endif
 
 // Boundary Element class: Store the property data of each boundary element
 class element
@@ -21,6 +24,10 @@ public:
     std::vector<double> xn;
     std::vector<double> yn;
 
+    // Raw Boundary condition
+    std::vector<double> Tx;     // Traction in x direction
+    std::vector<double> Ty;     // Traction in y direction
+    
     // Boundary condition Dirichet and Neumann
     std::vector<double> F;      // Airy stress laplacian : Del^2(phi)
     std::vector<double> p;      // Airy stress function  : phi

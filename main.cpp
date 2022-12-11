@@ -17,6 +17,7 @@
 int main(){
     // Initialize the storage data for boundary and internal element
     element PanelElement;
+    std::vector<element> InnerElement;
     intElement InternalNode;
     
     // Initialize the method
@@ -24,16 +25,16 @@ int main(){
     dataSaving save;
 
     // Initialization generate the element
-    init.generate_boundary_element(PanelElement);
-    init.generate_internal_node(InternalNode, PanelElement);
+    init.generate_boundary_element(PanelElement, InnerElement);
+    init.generate_internal_node(InternalNode, PanelElement, InnerElement);
 
-    // Calculate the initial condition
-    init.calculate_initial_condition(PanelElement);
+    // // Calculate the initial condition
+    // init.calculate_initial_condition(PanelElement);
 
-    // Write the element data
-    save.simulation_log();
-    save.write_internal_data(InternalNode);
-    save.write_BEM_data(PanelElement);
+    // // Write the element data
+    // save.simulation_log();
+    // save.write_internal_data(InternalNode);
+    // save.write_BEM_data(PanelElement);
 
     // INITIALIZATION
     // (1) Element Generation (Internal and Boundary)

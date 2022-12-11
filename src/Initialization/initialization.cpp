@@ -1,7 +1,7 @@
 #include "initialization.hpp"
 
 // Generation of internal node
-void initialization::generate_internal_node(intElement& intElm, const element& elm){
+void initialization::generate_internal_node(intElement& intElm, const element& elm, const std::vector<element>& in_elm){
     // initialization generate internal node starting log
     printf("\nGenerate the internal node ...\n");
 
@@ -26,98 +26,47 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
 
 // ===================================================
 // Generation of boundary panel element
-void initialization::generate_boundary_element(element& elm){
-    // initialization generate boundary panel starting log
-    printf("\nGenerate the boundary panel ...\n");
-
+void initialization::generate_boundary_element(element& elm, std::vector<element>& in_elm){
     // Procedure: \
-       1. Determine the number of panel at each rectangle\
-       2. Create the panel midpoint, normal, length sequencially in CCW direction\
+       1. Generate the base geometry panel element\
+       2. Generate the inner domain geometry panel element
 
-    // Internal variable
-    int nx = std::ceil(Par::dom_Lx/Par::len);
-    int ny = std::ceil(Par::dom_Ly/Par::len);
-    int num = 2 * (nx + ny);
-    double lx = Par::dom_Lx/(double)nx;
-    double ly = Par::dom_Ly/(double)ny;
-    double x_piv = -Par::dom_Lx/2.0;
-    double y_piv = -Par::dom_Ly/2.0;
+    // initialization generate boundary panel starting log
+    printf("\nGenerate the base geometry boundary panel ...\n");
     
-    // Resize each boundary element variable
-    elm.num = num;
-    elm.xm.resize(num,0.0e0);
-    elm.ym.resize(num,0.0e0);
-    elm.L.resize(num,0.0e0);
-    elm.xn.resize(num,0.0e0);
-    elm.yn.resize(num,0.0e0);
-
-    // Allocating the panel data (start from left-bottom corner)
-    int _id = 0;
-    // Bottom side -> moving to right
-    for (int i = 0; i < nx; i++){
-        // Midpoint coordinate position
-        elm.xm[_id] = x_piv + (i + 0.5) * lx;
-        elm.ym[_id] = y_piv;
-        elm.L[_id] = lx;
-        
-        // Normal to bottom direction
-        elm.xn[_id] = 0;
-        elm.yn[_id] = -1;
-        
-        _id++;
+    // Generate the base geometry panel element
+    if (Par::G_type == 1){
+        printf("<+> Rectangular geometry type\n");
+        this->element_rectangular(elm, -1);
+    }else if (Par::G_type == 2){
+        printf("<+> Circular geometry type\n");
+        this->element_circular(elm, -1);
     }
 
-    // Right side -> moving upward
-    for (int i = 0; i < ny; i++){
-        // Midpoint coordinate position
-        elm.xm[_id] = x_piv + Par::dom_Lx;
-        elm.ym[_id] = y_piv + (i + 0.5) * ly;
-        elm.L[_id] = ly;
-        
-        // Normal to right direction
-        elm.xn[_id] = 1;
-        elm.yn[_id] = 0;
-        
-        _id++;
-    }
+    // initialization generate boundary panel starting log
+    printf("\nGenerate the inner geometry boundary panel ...\n");
 
-    // Top side -> moving to left
-    for (int i = 0; i < nx; i++){
-        // Midpoint coordinate position
-        elm.xm[_id] = x_piv + Par::dom_Lx - (i + 0.5) * lx;
-        elm.ym[_id] = y_piv + Par::dom_Ly;
-        elm.L[_id] = lx;
+    // Generate the base geometry panel element
+    for (int ID = 0; ID < Par::N_Gin; ID++){
+        // Create the panel for each inner geometry
+        element innerPanel;
         
-        // Normal to right direction
-        elm.xn[_id] = 0;
-        elm.yn[_id] = 1;
-        
-        _id++;
-    }
-    
-    // Left side -> moving downward
-    for (int i = 0; i < ny; i++){
-        // Midpoint coordinate position
-        elm.xm[_id] = x_piv;
-        elm.ym[_id] = y_piv + Par::dom_Ly - (i + 0.5) * ly;
-        elm.L[_id] = ly;
-        
-        // Normal to right direction
-        elm.xn[_id] = -1;
-        elm.yn[_id] = 0;
-        
-        _id++;
-    }
+        // Create the panel
+        if (Par::Gin_type[ID] == 1){
+            printf("<+> Rectangular type for inner geometry %d \n", ID+1);
+            this->element_rectangular(innerPanel, ID);
+        }else if (Par::Gin_type[ID] == 2){
+            printf("<+> Circular type for inner geometry %d \n", ID+1);
+            this->element_circular(innerPanel, ID);
+        }
 
-    // Resize the other variable and set as 0.0
-    elm.F.resize(num,0.0e0);
-    elm.p.resize(num,0.0e0);
-    elm.dFdn.resize(num,0.0e0);
-    elm.dpdn.resize(num,0.0e0);
+        // Insert the panel into the list
+        in_elm.emplace_back(innerPanel);
+    }
 }
 
 // ===================================================
-// Calculate the initial condition at each panel
-void initialization::calculate_initial_condition(element& elm){
+// Calculate the boundary condition at each panel
+void initialization::calculate_boundary_condition(element& elm, std::vector<element>& in_elm){
     // The code lies here ...
 }

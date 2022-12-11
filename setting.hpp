@@ -14,10 +14,6 @@ namespace Par{
                                         1:= Plane strain,\
                                         2:= Plane stress
 
-    const extern int opt_geom;      // The geometry type;\
-                                        1:= Rectangle,\
-                                        2:= Continued...
-
     const extern int opt_int_init;  // The init. opt. for internal node;\
                                         1:= Regular,\
                                         2:= Finer near boundary
@@ -43,13 +39,10 @@ namespace Par{
     const extern double tes2;
     
 // #==================================================#
-// +------------- [SIMULATION PARAMETER] -------------+
+// +-------------- [GEOMETRY PARAMETER] --------------+
 // #==================================================#
-    // Geometry Parameter
-    const extern double dom_Lx;
-    const extern double dom_Ly;
-
-    /* The geometry visualization
+    /* The base geometry visualization
+      RECTANGULAR :
        _______________________________
       |                               |   ^
       |                               |   |
@@ -57,21 +50,76 @@ namespace Par{
       |              (+)              |   | dom_Ly
       |         Domain Center         |   |
       |                               |   |
-      |_______________________________|  _|_
+      |_______________________________|   v
       <------------dom_Lx------------->
+      
+      CIRCULAR :
+                 _ _ _ _    
+              *           *          ^
+           *                 *       |
+         *                     *     |
+        *                       *    |
+       *        Origin at        *   |
+       *           (+)           *   | dom_Ly
+       *      Domain Center      *   |
+        *                       *    |
+         *                     *     |
+           *                 *       |
+              *  _ _ _ _  *          v                                
+       <---------dom_Lx---------->
     */
 
-    // Initialization Parameter
-    const extern double traction_1;
-    const extern double traction_2;
-    const extern double traction_3;
-    const extern double traction_4;
+    // Base Geometry Parameter
+    const extern int G_type;       // Type of geometry: \
+                                    * 1 := Rectangular\
+                                    * 2 := Circular/Oval
+    const extern double dom_Lx;    // Base geometry x length
+    const extern double dom_Ly;    // Base geometry y length
+    
+    // Traction Parameter for Rectangular geometry\
+       -> traction is constant along the surface
+    // Bottom surface
+    const extern double trac_b_x;
+    const extern double trac_b_y;
+    // Right surface
+    const extern double trac_r_x;
+    const extern double trac_r_y;
+    // Top surface
+    const extern double trac_t_x;
+    const extern double trac_t_y;
+    // Left surface
+    const extern double trac_l_x;
+    const extern double trac_l_y;
 
+    // Traction Parameter for Circular geometry\
+       -> traction is only a pressure
+    const extern double trac_press;
+
+    // -----------------------------------
+    // Parameter of Geometry inside Domain
+    // -----------------------------------
+    const extern int N_Gin;                         // Number of geometry inside the domain (multiply connected)
+
+    // Parameter List of Geometry Inside the Domain 
+    const extern std::vector<int> Gin_type;         // Type of geometry: \
+                                                       * 1 := Rectangular\
+                                                       * 2 := Circular/Oval
+    const extern std::vector<double> Gin_Xlen;      // Geometry length in x direction
+    const extern std::vector<double> Gin_Ylen;      // Geometry length in y direction
+    const extern std::vector<double> Gin_Xcen_pos;  // Geometry center x position
+    const extern std::vector<double> Gin_Ycen_pos;  // Geometry center y position
+    const extern std::vector<double> Gin_Rot;       // Geometry rotation in CCW direction by degree
+    const extern std::vector<double> In_pressure;   // The value of internal pressure\
+                                                       -> Traction for internal boundary still limited to internal pressure
+
+// #==================================================#
+// +------------- [SIMULATION PARAMETER] -------------+
+// #==================================================#
     // Panel Element Parameter
-    const extern double len;     // Basic panel length
+    const extern double len;     // Panel length
 
     // Internal Node Parameter
-    const extern double spc;    // Basic panel length
+    const extern double spc;     // Internal node spacing
 }
 
 #endif
