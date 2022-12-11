@@ -1,9 +1,11 @@
 #ifndef BOUNDARY_ELEMENT_CALCULATION
 #define BOUNDARY_ELEMENT_CALCULATION
 
+#ifndef INCLUDE_VARIABLE
 #include "../../variable.hpp"
+#endif
+
 #include "../Eigen/Dense"
-#include <cmath>
 
 class calcBEM
 {

@@ -72,24 +72,42 @@ void initialization::calculate_boundary_condition(element& elm, std::vector<elem
        1. Base geometry element and \
        2. Inner domain geometry element
 
+    // ======== BASE GEOMETRY ========
     // initialization generate boundary panel starting log
     printf("\nCalculating boundary condition for base panel ...\n");
     
+    // Resize the boundary value array
+    elm.F.resize(elm.num, 0.0e0);
+    elm.dFdn.resize(elm.num, 0.0e0);
+    elm.p.resize(elm.num, 0.0e0);
+    elm.dpdn.resize(elm.num, 0.0e0);
+    elm.F_type.resize(elm.num, true);   // The basic known value (dFdn)
+    elm.p_type.resize(elm.num, true);   // The basic known value (dpdn)
+
     // Generate the base geometry panel element
     printf("<+> Calculate dFdn value\n");
-    this->element_rectangular(elm, -1);
+    this->F_val_calc(elm, -1);
     printf("<+> Calculate dpdn value\n");
-    this->element_rectangular(elm, -1);
+    this->p_val_calc(elm, -1);
 
+    // ======== INNER GEOMETRY ========
     // initialization generate boundary panel starting log
     printf("\nCalculating boundary condition for inner panel ...\n");
 
     // Generate the base geometry panel element
     for (int ID = 0; ID < Par::N_Gin; ID++){
+        // Resize the boundary value array
+        in_elm[ID].F.resize(in_elm[ID].num, 0.0e0);
+        in_elm[ID].dFdn.resize(in_elm[ID].num, 0.0e0);
+        in_elm[ID].p.resize(in_elm[ID].num, 0.0e0);
+        in_elm[ID].dpdn.resize(in_elm[ID].num, 0.0e0);
+        in_elm[ID].F_type.resize(in_elm[ID].num, true);   // The basic known value (dFdn)
+        in_elm[ID].p_type.resize(in_elm[ID].num, true);   // The basic known value (dpdn)
+
         // Generate the base geometry panel element
         printf("<+> Calculate dFdn for inner geometry %d \n", ID+1);
-        this->element_rectangular(elm, -1);
+        this->F_val_calc(in_elm[ID], ID);
         printf("<+> Calculate dpdn for inner geometry %d \n", ID+1);
-        this->element_rectangular(elm, -1);
+        this->p_val_calc(in_elm[ID], ID);
     }
 }

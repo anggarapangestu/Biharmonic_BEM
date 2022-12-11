@@ -18,10 +18,8 @@ private:
     void element_circular(element& elm, int ID);
 
     // Boundary condition calculation
-    void dFdn_calc(element& elm);
-    void F_calc(element& elm);
-    void dpdn_calc(element& elm);
-    void p_calc(element& elm);
+    void F_val_calc(element& elm, int ID);
+    void p_val_calc(element& elm, int ID);
 
 public:
     // The class public method belong here
