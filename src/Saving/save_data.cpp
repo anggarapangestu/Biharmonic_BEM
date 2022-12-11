@@ -126,10 +126,12 @@ void dataSaving::write_internal_data(const intElement& intElm){
     
     // close the write file
 	this->save.close();
+
+    printf("<+> Done saving internal node data\n");
 }
 
 // Method to write the boundary element data
-void dataSaving::write_BEM_data(const element& elm){
+void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& in_elm){
     // saving starting log
     printf("\nSaving the boundary element data ...\n");
     
@@ -146,26 +148,46 @@ void dataSaving::write_BEM_data(const element& elm){
                << "," << "length"
                << "," << "xnormal"
                << "," << "ynormal"
-               << "," << "F"
-               << "," << "phi" 
-               << "," << "dF_dn" 
-               << "," << "dphi_dn" 
+            //    << "," << "F"
+            //    << "," << "phi" 
+            //    << "," << "dF_dn" 
+            //    << "," << "dphi_dn" 
                << "\n";
 
 	// write each node data
+
+    // Base geometry
     for (int i = 0; i < elm.num; i++){
         this->save << "" << elm.xm[i]
                    << "," << elm.ym[i]
                    << "," << elm.L[i]
                    << "," << elm.xn[i]
                    << "," << elm.yn[i]
-                   << "," << elm.F[i]
-                   << "," << elm.p[i]
-                   << "," << elm.dFdn[i]
-                   << "," << elm.dpdn[i]
+                //    << "," << elm.F[i]
+                //    << "," << elm.p[i]
+                //    << "," << elm.dFdn[i]
+                //    << "," << elm.dpdn[i]
                    << "\n";
 	}
+
+    // Inner geometry
+    for(int ID = 0; ID < Par::N_Gin; ID++){
+        for (int i = 0; i < in_elm[ID].num; i++){
+            this->save << "" << in_elm[ID].xm[i]
+                    << "," << in_elm[ID].ym[i]
+                    << "," << in_elm[ID].L[i]
+                    << "," << in_elm[ID].xn[i]
+                    << "," << in_elm[ID].yn[i]
+                    // << "," << in_elm[ID].F[i]
+                    // << "," << in_elm[ID].p[i]
+                    // << "," << in_elm[ID].dFdn[i]
+                    // << "," << in_elm[ID].dpdn[i]
+                    << "\n";
+        }
+    }
     
     // close the write file
 	this->save.close();
+
+    printf("<+> Done saving boundary element data\n");
 }

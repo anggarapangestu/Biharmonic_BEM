@@ -93,17 +93,17 @@ namespace Par{
 
     // Parameter of Geometry inside Domain
     // ***********************************
-    const int N_Gin = 0;        // Number of geometry inside the domain (multiply connected)
+    const int N_Gin = 2;        // Number of geometry inside the domain (multiply connected)
 
     // Parameter List of Geometry Inside the Domain 
-    const std::vector<int> Gin_type = {2, 2};   // Type of geometry: \
+    const std::vector<int> Gin_type = {2, 1};   // Type of geometry: \
                                                     * 1 := Rectangular\
                                                     * 2 := Circular/Oval
-    const std::vector<double> Gin_Xlen = {0.5e0, 0.5e0};        // Geometry length in x direction
-    const std::vector<double> Gin_Ylen = {0.5e0, 0.5e0};        // Geometry length in y direction
-    const std::vector<double> Gin_Xcen_pos = {0.0e0, 1.0e0};    // Geometry center x position
+    const std::vector<double> Gin_Xlen = {2.0e0, 0.5e0};        // Geometry length in x direction
+    const std::vector<double> Gin_Ylen = {1.0e0, 0.5e0};        // Geometry length in y direction
+    const std::vector<double> Gin_Xcen_pos = {0.0e0, 2.0e0};    // Geometry center x position
     const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0};    // Geometry center y position
-    const std::vector<double> Gin_Rot = {0.0e0, 0.0e0};         // Geometry rotation in CCW direction by degree
+    const std::vector<double> Gin_Rot = {30.0e0, 45.0e0};         // Geometry rotation in CCW direction (in degree)
     const std::vector<double> In_pressure = {0.0e0, 0.0e0};     // The value of internal pressure\
                                                                     -> Traction for internal boundary still limited to internal pressure
 
@@ -111,7 +111,7 @@ namespace Par{
 // +------------- [SIMULATION PARAMETER] -------------+
 // #==================================================#
     // Panel Element Parameter
-    const double len = 0.05e0;    // Panel length
+    const double len = 0.08e0;     // Panel length
 
     // Internal Node Parameter
     const double spc = 0.1e0;     // Internal node spacing

@@ -31,10 +31,10 @@ int main(){
     // // Calculate the initial condition
     // init.calculate_initial_condition(PanelElement);
 
-    // // Write the element data
-    // save.simulation_log();
-    // save.write_internal_data(InternalNode);
-    // save.write_BEM_data(PanelElement);
+    // Write the element data
+    save.simulation_log();
+    save.write_internal_data(InternalNode);
+    save.write_BEM_data(PanelElement, InnerElement);
 
     // INITIALIZATION
     // (1) Element Generation (Internal and Boundary)
