@@ -97,10 +97,15 @@ void calcBEM::solve_F(element& elm, std::vector<element>& in_elm){
             }
 
             // Calculating the matrix element
-            _a = this->calc_a(xi,yi,xj,yj,xn,yn);
-            _k = this->calc_k(xi,yi,xj,yj,xn,yn);
-            _Aij = this->calc_Aij(_a,_k,L);
-            _Bij = this->calc_Bij(_a,_k,L);
+            if (Par::opt_BEM == 1){
+                _a = this->calc_a(xi,yi,xj,yj,xn,yn);
+                _k = this->calc_k(xi,yi,xj,yj,xn,yn);
+                _Aij = this->calc_Aij(_a,_k,L);
+                _Bij = this->calc_Bij(_a,_k,L);
+            }else if (Par::opt_BEM == 2){
+                _Aij = this->calc_dGdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Bij = this->calc_G_dL(xi,yi,xj,yj,xn,yn,L);
+            }    
             
             // Matrix assignment
             if (i == j){
@@ -111,6 +116,9 @@ void calcBEM::solve_F(element& elm, std::vector<element>& in_elm){
             B_Mat(i, j) = _Bij;
         }
     }
+
+    save.write_Matrix(A_Mat, "AF");
+    save.write_Matrix(B_Mat, "BF");
 
     // ================= Fill the BEM vector =================
     // *******************************************************
@@ -249,12 +257,19 @@ void calcBEM::solve_phi(element& elm, std::vector<element>& in_elm){
             }
 
             // Calculating the matrix element
-            _a = this->calc_a(xi,yi,xj,yj,xn,yn);
-            _k = this->calc_k(xi,yi,xj,yj,xn,yn);
-            _Aij = this->calc_Aij(_a,_k,L);
-            _Bij = this->calc_Bij(_a,_k,L);
-            _Cij = this->calc_Cij(_a,_k,L);
-            _Dij = this->calc_Dij(_a,_k,L);
+            if (Par::opt_BEM == 1){
+                _a = this->calc_a(xi,yi,xj,yj,xn,yn);
+                _k = this->calc_k(xi,yi,xj,yj,xn,yn);
+                _Aij = this->calc_Aij(_a,_k,L);
+                _Bij = this->calc_Bij(_a,_k,L);
+                _Cij = this->calc_Cij(_a,_k,L);
+                _Dij = this->calc_Dij(_a,_k,L);
+            }else if (Par::opt_BEM == 2){
+                _Aij = this->calc_dGdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Bij = this->calc_G_dL(xi,yi,xj,yj,xn,yn,L);
+                _Cij = this->calc_dWdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Dij = this->calc_W_dL(xi,yi,xj,yj,xn,yn,L);
+            }
             
             // Matrix
             if (i == j){
@@ -267,6 +282,11 @@ void calcBEM::solve_phi(element& elm, std::vector<element>& in_elm){
             D_Mat(i, j) = _Dij;
         }
     }
+    
+    save.write_Matrix(A_Mat, "Aphi");
+    save.write_Matrix(B_Mat, "Bphi");
+    save.write_Matrix(C_Mat, "Cpgi");
+    save.write_Matrix(D_Mat, "Dphi");
 
     // ================= Fill the BEM vector =================
     // *******************************************************
@@ -404,12 +424,19 @@ void calcBEM::calculate_internal_phi(intElement& intElm, const element& elm, con
             }
 
             // Calculating the matrix element
-            _a = this->calc_a(xi,yi,xj,yj,xn,yn);
-            _k = this->calc_k(xi,yi,xj,yj,xn,yn);
-            _Aij = this->calc_Aij(_a,_k,L);
-            _Bij = this->calc_Bij(_a,_k,L);
-            _Cij = this->calc_Cij(_a,_k,L);
-            _Dij = this->calc_Dij(_a,_k,L);
+            if (Par::opt_BEM == 1){
+                _a = this->calc_a(xi,yi,xj,yj,xn,yn);
+                _k = this->calc_k(xi,yi,xj,yj,xn,yn);
+                _Aij = this->calc_Aij(_a,_k,L);
+                _Bij = this->calc_Bij(_a,_k,L);
+                _Cij = this->calc_Cij(_a,_k,L);
+                _Dij = this->calc_Dij(_a,_k,L);
+            }else if (Par::opt_BEM == 2){
+                _Aij = this->calc_dGdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Bij = this->calc_G_dL(xi,yi,xj,yj,xn,yn,L);
+                _Cij = this->calc_dWdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Dij = this->calc_W_dL(xi,yi,xj,yj,xn,yn,L);
+            }
             
             // Matrix
             A_group += _Aij * _p;

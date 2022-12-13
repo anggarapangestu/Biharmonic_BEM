@@ -1,0 +1,25 @@
+#=================================================#
++---------------- SIMULATION LOG -----------------+
+#=================================================#
+
++-------------- Material Properties --------------+
+Elasticity (E)                        :  69.00 GPa
+Poisson Ratio (nu)                    :   0.30 [-]
+Lame's constant mu                    :  26.54 GPa
+Lame's constant lambda                :  39.81 GPa
++-------------------------------------------------+
+
++----------- Simulation Setting Option -----------+
+Simulation type (P_Strain / P_Stress)   : type 1
+Body option                             : type 1
+Initialization option                   : type 2
+BEM calculation option                  : type 1
+Base internal node spacing              : 0.0800 m
+Base panel length                       : 0.1000 m
++-------------------------------------------------+
+
++---------------- Additional Data ----------------+
+Number of boundary surface              :      1
+Support domain radius factor            : 3.5000
++-------------------------------------------------+
+

@@ -18,26 +18,19 @@ namespace Par{
     const extern int opt_int_init;  // The init. opt. for internal node;\
                                         1:= Regular,\
                                         2:= Finer near boundary
-
-    const extern int opt_saving;    // The saving setting;\
-                                        1:= Type 1,\
-                                        2:= Continued...
     
-    const extern int opt_size;
-
-    const extern bool flag_save_log;
-    const extern bool flag_a;
-    const extern bool flag_b;
+    const extern int opt_BEM;       // The option for BEM calculation;\
+                                        1:= Type 1 calculation -> Calculate A, B, C, and D,\
+                                        2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn
 
 // #==================================================#
 // +--------------- [PROGRAM PARAMETER] --------------+
 // #==================================================#
     // Saving Parameter
-    // ...
-
-    // Boundary Element Calculation Parameter
-    const extern double tes1;
-    const extern double tes2;
+    const extern bool flag_save_Neigh;      // Flag to save neighbor ID
+    const extern bool flag_save_Int_Node;   // Flag to save internal node data
+    const extern bool flag_save_BEM;        // Flag to save boundary element data
+    const extern bool flag_save_log;        // Flag to save simulation log
     
 // #==================================================#
 // +-------------- [GEOMETRY PARAMETER] --------------+

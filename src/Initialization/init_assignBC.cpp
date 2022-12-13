@@ -9,6 +9,11 @@ void initialization::F_val_calc(element& elm, int ID){
         elm.dFdn[i] = _guess_value;
     }
 
+    // // Method by Dewangga [2021]
+    // for (int i = 0; i < elm.num; i++){
+    //     elm.dFdn[i] = elm.Tx[i] * elm.xn[i] + elm.Ty[i] * elm.yn[i];
+    // }
+
     // Other case if dirichlet obtained
     /* Code lies here ... */
 }

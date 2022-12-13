@@ -5,6 +5,10 @@
 #include "../../variable.hpp"
 #endif
 
+#ifndef SAVE_DATA
+#include "../Saving/save_data.hpp"
+#endif
+
 #include "../Eigen/Dense"
 
 class calcBEM
@@ -12,6 +16,8 @@ class calcBEM
 private:
     // The class private method belong here
     #define M_PI 3.14159265358979323846
+
+    dataSaving save;
 
     // Internal variable
     int N;                      // The matrix size
@@ -23,6 +29,12 @@ private:
     double calc_Bij(double a_ij, double k_ij, double L);
     double calc_Cij(double a_ij, double k_ij, double L);
     double calc_Dij(double a_ij, double k_ij, double L);
+
+    // Element BEM matrix calculation tools
+    double calc_G_dL(double x_0, double y_0, double x, double y, double x_n, double y_n, double L);
+    double calc_W_dL(double x_0, double y_0, double x, double y, double x_n, double y_n, double L);
+    double calc_dGdn_dL(double x_0, double y_0, double x, double y, double x_n, double y_n, double L);
+    double calc_dWdn_dL(double x_0, double y_0, double x, double y, double x_n, double y_n, double L);
     
     // Local parameter calculation tools
     double calc_a(double x_0, double y_0, double x_m, double y_m, double x_n, double y_n);
@@ -36,6 +48,7 @@ public:
     void solve_F(element& elm, std::vector<element>& in_elm);
     void solve_phi(element& elm, std::vector<element>& in_elm);
     void calculate_internal_phi(intElement& intElm, const element& elm, const std::vector<element>& in_elm);
+    void TEST_BEM(element& elm, std::vector<element>& in_elm);
 };
 
 // - Solve the Laplace of F

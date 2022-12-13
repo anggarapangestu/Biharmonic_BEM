@@ -9,29 +9,22 @@ namespace Par{
                                     1:= Plane strain,\
                                     2:= Plane stress
 
-    const int opt_int_init = 2;  // The init. opt. for internal node;\
+    const int opt_int_init = 1;  // The init. opt. for internal node;\
                                     1:= Regular,\
                                     2:= Finer near boundary
-
-    const int opt_saving = 1;    // The saving setting;\
-                                    1:= Type 1,\
-                                    2:= Continued...
     
-    const int opt_size = 1;
-
-    const bool flag_save_log = true;
-    const bool flag_a = true;
-    const bool flag_b = true;
+    const int opt_BEM = 1;       // The option for BEM calculation;\
+                                    1:= Type 1 calculation -> Calculate A, B, C, and D,\
+                                    2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn
 
 // #==================================================#
-// +--------------- [PROGRAM PARAMETER] --------------+
+// +--------------- [SAVING PARAMETER] ---------------+
 // #==================================================#
     // Saving Parameter
-    // ...
-
-    // Boundary Element Calculation Parameter
-    const double tes1 = 1.0e0;
-    const double tes2 = 1.2e0;
+    const bool flag_save_Neigh = true;      // Flag to save neighbor ID
+    const bool flag_save_Int_Node = true;   // Flag to save internal node data
+    const bool flag_save_BEM = true;        // Flag to save boundary element data
+    const bool flag_save_log = true;        // Flag to save simulation log
 
 // #==================================================#
 // +-------------- [GEOMETRY PARAMETER] --------------+
@@ -99,11 +92,11 @@ namespace Par{
     const std::vector<int> Gin_type = {2, 1, 2};   // Type of geometry: \
                                                     * 1 := Rectangular\
                                                     * 2 := Circular/Oval
-    const std::vector<double> Gin_Xlen = {2.0e0, 0.5e0, 0.5e0};        // Geometry length in x direction
+    const std::vector<double> Gin_Xlen = {1.0e0, 0.5e0, 0.5e0};        // Geometry length in x direction
     const std::vector<double> Gin_Ylen = {1.0e0, 0.5e0, 0.5e0};        // Geometry length in y direction
-    const std::vector<double> Gin_Xcen_pos = {0.0e0, 2.0e0, -0.5e0};   // Geometry center x position
+    const std::vector<double> Gin_Xcen_pos = {0.0e0, 1.0e0, -0.5e0};   // Geometry center x position
     const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0, -0.5e0};   // Geometry center y position
-    const std::vector<double> Gin_Rot = {30.0e0, 45.0e0, 50.0e0};      // Geometry rotation in CCW direction (in degree)
+    const std::vector<double> Gin_Rot = {0.0e0, 45.0e0, 50.0e0};      // Geometry rotation in CCW direction (in degree)
     const std::vector<double> In_pressure = {0.0e0, 0.0e0, 0.0e0};     // The value of internal pressure\
                                                                            -> Traction for internal boundary still limited to internal pressure
 
@@ -111,10 +104,10 @@ namespace Par{
 // +------------- [SIMULATION PARAMETER] -------------+
 // #==================================================#
     // Panel Element Parameter
-    const double len = 0.03e0;     // Panel length
+    const double len = 0.08e0;     // Panel length
 
     // Internal Node Parameter
-    const double spc = 0.08e0;      // Internal node spacing
+    const double spc = 0.04e0;      // Internal node spacing
     const double dist_fac = 4.0e0; // The spacing factor of finer region
 
     // Neighbor Parameter

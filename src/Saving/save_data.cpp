@@ -22,8 +22,7 @@ void dataSaving::simulation_log(){
 	printf("Simulation type (P_Strain / P_Stress) :   type %d \n", Par::opt_sim_type);
     printf("Body option                           :   type %d \n", Par::G_type);
 	printf("Initialization option                 :   type %d \n", Par::opt_int_init);
-    printf("Saving option                         :   type %d \n", Par::opt_saving);
-	// printf("Neighbor search option                :   type %d \n", Par::opt_neighbor);
+    printf("BEM calculation type                  :   type %d \n", Par::opt_BEM);
 	// printf("Maximum resolution level              :        %d \n", Par::max_level);
 	printf("Base internal node spacing            : %8.4f m\n", Par::spc);
     printf("Base panel length                     : %8.4f m\n", Par::len);
@@ -58,8 +57,8 @@ void dataSaving::simulation_log(){
                << "Simulation type (P_Strain / P_Stress)   : " << "type " << Par::opt_sim_type << "\n"
                << "Body option                             : " << "type " << Par::G_type << "\n"
                << "Initialization option                   : " << "type " << Par::opt_int_init << "\n"
-               << "Saving option                           : " << "type " << Par::opt_saving << "\n"
-               //  << "Neighbor search option                  : " << "type " << Par::opt_neighbor << "\n"
+               << "BEM calculation option                  : " << "type " << Par::opt_BEM << "\n"
+            //    << "Neighbor search option                  : " << "type " << Par::opt_neighbor << "\n"
                ;
 	this->save << std::fixed << std::setprecision(4)
                << "Base internal node spacing              : "; save.width(6); save << std::right << Par::spc << " m\n"
@@ -81,7 +80,10 @@ void dataSaving::simulation_log(){
 
 // Method to write the internal data properties
 void dataSaving::write_internal_data(const intElement& intElm){
-	// saving starting log
+	// Cancel the saving procedure if flag is closed
+    if (Par::flag_save_Int_Node == false){return;}
+
+    // saving starting log
     printf("\nSaving the internal node data ...\n");
     
     // write file name
@@ -133,6 +135,9 @@ void dataSaving::write_internal_data(const intElement& intElm){
 
 // Method to write the boundary element data
 void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& in_elm){
+    // Cancel the saving procedure if flag is closed
+    if (Par::flag_save_BEM == false){return;}
+    
     // saving starting log
     printf("\nSaving the boundary element data ...\n");
     
@@ -197,4 +202,28 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
 	this->save.close();
 
     printf("<+> Done saving boundary element data\n");
+}
+
+void dataSaving::write_Matrix(const Eigen::MatrixXd& MAT, std::string name){
+    // saving starting log
+    printf("\nSaving matrix %s ...\n", name.c_str());
+    
+	// open the write file
+    std::string _name = "output/matrix_";
+    _name.append(name.c_str());
+	_name.append(".csv");
+	this->save.open(_name.c_str());
+
+    // write the matrix data
+    for (size_t i = 0; i < MAT.rows(); i++){
+        this->save << MAT(i, 0);
+        for (size_t j = 1; j < MAT.cols(); j++){
+            this->save << "," << MAT(i, j);
+        }
+        this->save << "\n";
+    }
+    this->save << "\n";
+    
+    // close the write file
+	this->save.close();
 }

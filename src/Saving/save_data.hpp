@@ -5,6 +5,8 @@
 #include <fstream>
 #include <string>
 
+#include "../Eigen/Dense"
+
 class dataSaving
 {
 private:
@@ -15,6 +17,7 @@ public:
     void simulation_log();                                 // Displaying and saving the simulation log
     void write_internal_data(const intElement& intElm);    // Saving the internal node data
     void write_BEM_data(const element& elm, const std::vector<element>& in_elm);  // Saving the boundary panel data
+    void write_Matrix(const Eigen::MatrixXd& MAT, std::string name);  // Saving the boundary panel data
 };
 
 #endif

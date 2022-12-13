@@ -51,6 +51,9 @@ $(PROGRAM):	OBPR $(OBJS)
 # Target to compile and link all program
 compile:	$(PROGRAM)
 
+# Target to rebuild the program
+rebuild:	clean $(PROGRAM)
+
 # Target for displaying initial object building prompt
 OBPR:
 			@echo "Start building the object file ..."

@@ -87,6 +87,9 @@ int main(){
     // Initialize the BEM paramter
     BEMstep.Define_BEM(PanelElement, InnerElement);
 
+    
+    // BEMstep.TEST_BEM(PanelElement, InnerElement);
+
     // Calculate the other boundary element value
     BEMstep.solve_F(PanelElement, InnerElement);
     BEMstep.solve_phi(PanelElement, InnerElement);
