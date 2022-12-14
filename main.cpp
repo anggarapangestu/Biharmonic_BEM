@@ -96,6 +96,7 @@ int main(){
 
     // Calculate the phi value at the internal domain node
     BEMstep.calculate_internal_phi(InternalNode, PanelElement, InnerElement);
+    prop_step.phi_analytic_biaxial(InternalNode);
 
 /*
     Eigen::MatrixXd A = Eigen::MatrixXd::Zero(3,3);

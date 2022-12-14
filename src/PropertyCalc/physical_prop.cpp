@@ -46,6 +46,23 @@ void propertyCalc::calculate_property(intElement& intNode){
     printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
+void propertyCalc::phi_analytic_biaxial(intElement& intNode){
+    // phi = Ax^2 + Bxy + Cy^2
+    // A = s_yy/2
+    // B = -s_xy
+    // C = s_xx/2
+    double A, B, C;
+    A = Par::trac_t_y / 2.0;
+    B = 0.0;
+    C = Par::trac_r_x / 2.0;
+    intNode.phi_an.resize(intNode.num,0.0e0);
+    for (size_t i = 0; i < intNode.num; i++){
+        intNode.phi_an[i] = A * std::pow(intNode.x[i],2) 
+                            + B * intNode.x[i]*intNode.y[i]
+                            + C * std::pow(intNode.y[i],2);
+    }
+
+}
 // ======================================================================
 // ======================================================================
 // Calculation of stress by using LSMPS

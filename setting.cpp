@@ -82,7 +82,7 @@ namespace Par{
 
     // Traction Parameter for Circular geometry\
        -> traction is only a pressure
-    const double trac_press = 1.0e3;
+    const double trac_press = 0.0e3;
 
     // Parameter of Geometry inside Domain
     // ***********************************
@@ -92,12 +92,12 @@ namespace Par{
     const std::vector<int> Gin_type = {2, 1, 2};   // Type of geometry: \
                                                     * 1 := Rectangular\
                                                     * 2 := Circular/Oval
-    const std::vector<double> Gin_Xlen = {1.0e0, 0.5e0, 0.5e0};        // Geometry length in x direction
-    const std::vector<double> Gin_Ylen = {1.0e0, 0.5e0, 0.5e0};        // Geometry length in y direction
+    const std::vector<double> Gin_Xlen = {2.5e0, 0.5e0, 0.5e0};        // Geometry length in x direction
+    const std::vector<double> Gin_Ylen = {2.5e0, 0.5e0, 0.5e0};        // Geometry length in y direction
     const std::vector<double> Gin_Xcen_pos = {0.0e0, 1.0e0, -0.5e0};   // Geometry center x position
     const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0, -0.5e0};   // Geometry center y position
     const std::vector<double> Gin_Rot = {0.0e0, 45.0e0, 50.0e0};      // Geometry rotation in CCW direction (in degree)
-    const std::vector<double> In_pressure = {0.0e0, 0.0e0, 0.0e0};     // The value of internal pressure\
+    const std::vector<double> In_pressure = {1.0e3, 0.0e0, 0.0e0};     // The value of internal pressure\
                                                                            -> Traction for internal boundary still limited to internal pressure
 
 // #==================================================#
@@ -107,7 +107,7 @@ namespace Par{
     const double len = 0.08e0;     // Panel length
 
     // Internal Node Parameter
-    const double spc = 0.04e0;      // Internal node spacing
+    const double spc = 0.02e0;      // Internal node spacing
     const double dist_fac = 4.0e0; // The spacing factor of finer region
 
     // Neighbor Parameter

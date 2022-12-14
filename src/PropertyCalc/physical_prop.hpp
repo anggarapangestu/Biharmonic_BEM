@@ -23,6 +23,7 @@ private:
     void calculate_disp(intElement& intNode);
 public:
     void calculate_property(intElement& intNode);
+    void phi_analytic_biaxial(intElement& intNode);
 };
 
 #endif

@@ -55,19 +55,33 @@ public:
 
     // Boundary condition Dirichet and Neumann
     std::vector<double> phi;      // Airy stress function (phi)
-
-    // Stress properties
+    std::vector<double> phi_an;   // Airy stress function of analytic solution (phi)
+    
+    // ============= STRESS =============
+    // Stress properties (cartesian)
     std::vector<double> s_xx;   // Normal stress in x-direction
     std::vector<double> s_yy;   // Normal stress in y-direction
     std::vector<double> s_zz;   // Normal stress in z-direction
     std::vector<double> t_xy;   // Shear stress in xy-plane
 
-    // Strain properties
+    // Stress properties (cylindrical)
+    std::vector<double> s_rr;   // Normal stress in r-direction
+    std::vector<double> s_tt;   // Normal stress in θ-direction
+    std::vector<double> t_rt;   // Shear stress in rθ-plane
+    
+    // ============= STRAIN =============
+    // Strain properties (cartesian)
     std::vector<double> e_xx;   // Normal strain in x-direction
     std::vector<double> e_yy;   // Normal strain in y-direction
     std::vector<double> e_zz;   // Normal strain in z-direction
     std::vector<double> e_xy;   // Shear strain in xy-plane
 
+    // Strain properties (cylindrical)
+    std::vector<double> e_rr;   // Normal strain in r-direction
+    std::vector<double> e_tt;   // Normal strain in θ-direction
+    std::vector<double> e_rt;   // Shear strain in rθ-plane
+
+    // ============= Displacement =============
     // Displacement properties
     std::vector<double> u;      // Displacement in x direction
     std::vector<double> v;      // Displacement in y direction

@@ -285,7 +285,7 @@ void calcBEM::solve_phi(element& elm, std::vector<element>& in_elm){
     
     save.write_Matrix(A_Mat, "Aphi");
     save.write_Matrix(B_Mat, "Bphi");
-    save.write_Matrix(C_Mat, "Cpgi");
+    save.write_Matrix(C_Mat, "Cphi");
     save.write_Matrix(D_Mat, "Dphi");
 
     // ================= Fill the BEM vector =================

@@ -14,12 +14,12 @@ Simulation type (P_Strain / P_Stress)   : type 1
 Body option                             : type 1
 Initialization option                   : type 1
 BEM calculation option                  : type 1
-Base internal node spacing              : 0.0400 m
+Base internal node spacing              : 0.0200 m
 Base panel length                       : 0.0800 m
 +-------------------------------------------------+
 
 +---------------- Additional Data ----------------+
-Number of boundary surface              :      3
+Number of boundary surface              :      1
 Support domain radius factor            : 3.5000
 +-------------------------------------------------+
 

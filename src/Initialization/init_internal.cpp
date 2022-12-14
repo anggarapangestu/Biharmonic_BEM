@@ -85,7 +85,7 @@ void initialization::internal_regular(intElement& intElm, const element& elm, co
         // Determine whether the node lies inside or outside the domain
         double R_n;  // The normal direction which is vec(r) dot hat(n)
         R_n = elm.xn[nst_id] * (_x - elm.xm[nst_id]) + elm.yn[nst_id] * (_y - elm.ym[nst_id]);
-        if (R_n > 0){
+        if (R_n >= 0){
             // Node lies outside the domain, then it need to be deleted
             _assign[i] = false;
             _num--;
@@ -127,7 +127,7 @@ void initialization::internal_regular(intElement& intElm, const element& elm, co
             // Determine whether the node lies inside or outside the domain
             double R_n;  // The normal direction which is vec(r) dot hat(n)
             R_n = in_elm[ID].xn[nst_id] * (_x - in_elm[ID].xm[nst_id]) + in_elm[ID].yn[nst_id] * (_y - in_elm[ID].ym[nst_id]);
-            if (R_n > 0){
+            if (R_n >= 0){
                 // Node lies outside the domain, then it need to be deleted
                 _assign[i] = false;
                 _num--;
@@ -274,7 +274,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
                 // Determine whether the node lies inside or outside the domain
                 double R_n;  // The normal direction which is vec(r) dot hat(n)
                 R_n = elm.xn[nst_id] * (__x - elm.xm[nst_id]) + elm.yn[nst_id] * (__y - elm.ym[nst_id]);
-                if (R_n <= 0){
+                if (R_n < 0){
                     // If lies inside the domain assign into the new
                     x_pos.push_back(__x);
                     y_pos.push_back(__y);
@@ -290,7 +290,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
             // Determine whether the node lies inside or outside the domain
             double R_n;  // The normal direction which is vec(r) dot hat(n)
             R_n = elm.xn[nst_id] * (_x - elm.xm[nst_id]) + elm.yn[nst_id] * (_y - elm.ym[nst_id]);
-            if (R_n > 0){
+            if (R_n >= 0){
                 // Node lies outside the domain, then it need to be deleted
                 _assign[i] = false;
                 _num--;
@@ -364,7 +364,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
                     // Determine whether the node lies inside or outside the domain
                     double R_n;  // The normal direction which is vec(r) dot hat(n)
                     R_n = in_elm[ID].xn[nst_id] * (__x - in_elm[ID].xm[nst_id]) + in_elm[ID].yn[nst_id] * (__y - in_elm[ID].ym[nst_id]);
-                    if (R_n <= 0){
+                    if (R_n < 0){
                         // If lies inside the domain assign into the new
                         x_pos.push_back(__x);
                         y_pos.push_back(__y);
@@ -380,7 +380,7 @@ void initialization::internal_finer_near_panel(intElement& intElm, const element
                 // Determine whether the node lies inside or outside the domain
                 double R_n;  // The normal direction which is vec(r) dot hat(n)
                 R_n = in_elm[ID].xn[nst_id] * (_x - in_elm[ID].xm[nst_id]) + in_elm[ID].yn[nst_id] * (_y - in_elm[ID].ym[nst_id]);
-                if (R_n > 0){
+                if (R_n >= 0){
                     // Node lies outside the domain, then it need to be deleted
                     _assign[i] = false;
                     _num--;

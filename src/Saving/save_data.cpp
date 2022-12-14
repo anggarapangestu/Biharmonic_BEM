@@ -99,6 +99,7 @@ void dataSaving::write_internal_data(const intElement& intElm){
                << "," << "R"
                << "," << "s"
                << "," << "phi"
+               << "," << "phi_an"
                << "," << "sigma_xx"
                << "," << "sigma_yy" 
                << "," << "tau_xy" 
@@ -116,6 +117,7 @@ void dataSaving::write_internal_data(const intElement& intElm){
                    << "," << intElm.R[i]
                    << "," << intElm.s[i]
                    << "," << intElm.phi[i]
+                   << "," << intElm.phi_an[i]
                    << "," << intElm.s_xx[i]
                    << "," << intElm.s_yy[i]
                    << "," << intElm.t_xy[i]
@@ -206,7 +208,7 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
 
 void dataSaving::write_Matrix(const Eigen::MatrixXd& MAT, std::string name){
     // saving starting log
-    printf("\nSaving matrix %s ...\n", name.c_str());
+    printf("<+> Saving matrix %s ...\n", name.c_str());
     
 	// open the write file
     std::string _name = "output/matrix_";
