@@ -16,7 +16,11 @@
 DEST		= output/
 COMPILER	= g++
 PROGRAM		= program
+PROGRAM_LOG	= log
 
+# ==========================================
+# ============ PROGRAM COMPILE =============
+# ==========================================
 # List of cpp source file path
 SRCS		= main.cpp\
 			setting.cpp\
@@ -30,10 +34,10 @@ SRCS		= main.cpp\
 			src/LSMPS/LSMPSa.cpp\
 			src/Neighbor/link_list.cpp\
 			src/Neighbor/link_list_utils.cpp\
-			src/PropertyCalc/physical_prop.cpp\
+			src/PropertyCalc/physical_prop.cpp
 
 # List of target object file path
-OBJS		= $(SRCS:%.cpp=%.o)            # Change from SRCS the ".cpp" into ".o"
+OBJS		= $(SRCS:%.cpp=%.o)           # Change from SRCS the ".cpp" into ".o"
 
 # Target to create the object file from cpp source file
 %.o: %.cpp
@@ -51,17 +55,55 @@ $(PROGRAM):	OBPR $(OBJS)
 # Target to compile and link all program
 compile:	$(PROGRAM)
 
-# Target to rebuild the program
-rebuild:	clean $(PROGRAM)
-
 # Target for displaying initial object building prompt
 OBPR:
 			@echo "Start building the object file ..."
+
+# Target to rebuild the program
+rebuild:	clean $(PROGRAM)
 
 # Target to run the program
 run:
 			@./$(PROGRAM)
 
+# ==========================================
+# ============= SIMULATION LOG =============
+# ==========================================
+# List of cpp source file path for log
+LOG			= log.cpp\
+			setting.cpp\
+			src/Saving/save_data.cpp
+
+# Object file path for log
+OBJS_LOG	= $(LOG:%.cpp=%.o)            # Change from SRCS the ".cpp" into ".o"
+
+# Target to compile and link all log
+$(PROGRAM_LOG):	OBPR $(OBJS_LOG)
+			@echo "\n[DONE] Object file is completely built"
+			@echo "\nStart linking the object ..."
+			$(COMPILER) $(OBJS_LOG) -o $(PROGRAM_LOG)
+			@echo "\n[DONE] Program compiled and linked successfully"
+
+# Target to compile and link all log
+compile_log:$(PROGRAM_LOG)
+
+# Target for displaying initial object building prompt
+OBPR_LOG:
+			@echo "Start building the log object file ..."
+
+# Target to run the log message
+run_log:
+			@./$(PROGRAM_LOG)
+
+# Clean log
+clean_log:
+			@rm -f $(OBJS_LOG)
+			@rm -f $(PROGRAM_LOG)
+			@echo "+-------------- LOG CLEANED -------------+"
+
+# ==========================================
+# ================== DATA ==================
+# ==========================================
 # Target to delete the object and program files
 clean:
 			@while [ -z "$$CONTINUE" ]; do \
