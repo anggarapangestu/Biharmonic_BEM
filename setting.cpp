@@ -5,7 +5,7 @@ namespace Par{
 // +-------------------- [OPTION] --------------------+
 // #==================================================#
     // Basic Setting
-    const int opt_sim_type = 1;  // The simulation type;\
+    const int opt_sim_type = 2;  // The simulation type;\
                                     1:= Plane strain,\
                                     2:= Plane stress
 
@@ -15,16 +15,16 @@ namespace Par{
     
     const int opt_BEM = 1;       // The option for BEM calculation;\
                                     1:= Type 1 calculation -> Calculate A, B, C, and D,\
-                                    2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn
+                                    2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn - (Not works)
 
 // #==================================================#
 // +--------------- [SAVING PARAMETER] ---------------+
 // #==================================================#
     // Saving Parameter
-    const bool flag_save_Neigh = true;      // Flag to save neighbor ID
+    const bool flag_save_Neigh = false;      // Flag to save neighbor ID
     const bool flag_save_Int_Node = true;   // Flag to save internal node data
     const bool flag_save_BEM = true;        // Flag to save boundary element data
-    const bool flag_save_log = true;        // Flag to save simulation log
+    const bool flag_save_log = false;        // Flag to save simulation log
 
 // #==================================================#
 // +-------------- [GEOMETRY PARAMETER] --------------+
@@ -62,7 +62,7 @@ namespace Par{
                                     * 1 := Rectangular\
                                     * 2 := Circular/Oval
 
-    const double dom_Lx = 5.0e0;    // Base geometry x length
+    const double dom_Lx = 4.0e0;    // Base geometry x length
     const double dom_Ly = 4.0e0;    // Base geometry y length
     
     // Traction Parameter for Rectangular geometry\
@@ -86,28 +86,28 @@ namespace Par{
 
     // Parameter of Geometry inside Domain
     // ***********************************
-    const int N_Gin = 0;        // Number of geometry inside the domain (multiply connected)
+    const int N_Gin = 1;        // Number of geometry inside the domain (multiply connected)
 
     // Parameter List of Geometry Inside the Domain 
-    const std::vector<int> Gin_type = {2, 1, 2};   // Type of geometry: \
-                                                    * 1 := Rectangular\
-                                                    * 2 := Circular/Oval
-    const std::vector<double> Gin_Xlen = {2.5e0, 0.5e0, 0.5e0};        // Geometry length in x direction
-    const std::vector<double> Gin_Ylen = {2.5e0, 0.5e0, 0.5e0};        // Geometry length in y direction
-    const std::vector<double> Gin_Xcen_pos = {0.0e0, 1.0e0, -0.5e0};   // Geometry center x position
-    const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0, -0.5e0};   // Geometry center y position
-    const std::vector<double> Gin_Rot = {0.0e0, 45.0e0, 50.0e0};      // Geometry rotation in CCW direction (in degree)
-    const std::vector<double> In_pressure = {1.0e3, 0.0e0, 0.0e0};     // The value of internal pressure\
-                                                                           -> Traction for internal boundary still limited to internal pressure
+    const std::vector<int> Gin_type = {2, 2, 2, 2, 2};   // Type of geometry: \
+                                                        * 1 := Rectangular\
+                                                        * 2 := Circular/Oval
+    const std::vector<double> Gin_Xlen = {1.0e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};        // Geometry length in x direction
+    const std::vector<double> Gin_Ylen = {1.0e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};        // Geometry length in y direction
+    const std::vector<double> Gin_Xcen_pos = {0.0e0, 1.0e0, 1.0e0, -1.0e0, -1.0e0};  // Geometry center x position
+    const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0, -1.0e0, -1.0e0, 1.0e0};  // Geometry center y position
+    const std::vector<double> Gin_Rot = {0.0e0, 0.0e0, 0.0e0, 0.0e0, 0.0e0};         // Geometry rotation in CCW direction (in degree)
+    const std::vector<double> In_pressure = {0.0e0, 0.0e0, 0.0e0, 0.0e0, 0.0e0};     // The value of internal pressure\
+                                                                                        -> Traction for internal boundary still limited to internal pressure
 
 // #==================================================#
 // +------------- [SIMULATION PARAMETER] -------------+
 // #==================================================#
     // Panel Element Parameter
-    const double len = 0.08e0;     // Panel length
+    const double len = 0.04e0;     // Panel length
 
     // Internal Node Parameter
-    const double spc = 0.02e0;      // Internal node spacing
+    const double spc = 0.04e0;      // Internal node spacing
     const double dist_fac = 4.0e0; // The spacing factor of finer region
 
     // Neighbor Parameter

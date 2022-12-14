@@ -193,7 +193,7 @@ void calcBEM::swap_col(Eigen::MatrixXd& A, Eigen::MatrixXd& B, int col){
         A(i,col) = -B(i,col);
         B(i,col) = _temp;
     }
-    std::cout << "[LOG] Matrix Swapped\n";
+    // std::cout << "[LOG] Matrix Swapped\n";
 }
 
 

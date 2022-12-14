@@ -85,9 +85,7 @@ int main(){
     std::cout << "#=================================================#\n";
     
     // Initialize the BEM paramter
-    BEMstep.Define_BEM(PanelElement, InnerElement);
-
-    
+    BEMstep.Define_BEM(PanelElement, InnerElement);    
     // BEMstep.TEST_BEM(PanelElement, InnerElement);
 
     // Calculate the other boundary element value
@@ -99,27 +97,20 @@ int main(){
     prop_step.phi_analytic_biaxial(InternalNode);
 
 /*
-    Eigen::MatrixXd A = Eigen::MatrixXd::Zero(3,3);
-    Eigen::MatrixXd B = Eigen::MatrixXd::Zero(3,3);
+    Eigen::MatrixXd A = Eigen::MatrixXd::Zero(2,2);
+    Eigen::VectorXd B = Eigen::VectorXd::Zero(2);
     for (int i = 0; i < A.rows(); i++){
         for (int j = 0; j < A.cols(); j++){
             A(i, j) = 1+i+j;
-            B(i, j) = 7+j+i*2;
+            B(i) = 7+j+i*2;
         }
     }
     std::cout << A << std::endl;
     std::cout << B << std::endl;
     
-    double _temp;
-    int col = 1;
-    for (int i = 0; i < A.rows(); i++){
-        _temp = A(i,col);
-        A(i,col) = B(i,col);
-        B(i,col) = _temp;
-    }
+    Eigen::VectorXd bi = A.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(B);
 
-    std::cout << A << std::endl;
-    std::cout << B << std::endl;
+    std::cout << bi << std::endl;
 */
 
     // =======================================
