@@ -21,6 +21,7 @@ private:
     void calculate_stress(intElement& intNode);
     void calculate_strain(intElement& intNode);
     void calculate_disp(intElement& intNode);
+    void coor_transform(intElement& intNode);
 public:
     void calculate_property(intElement& intNode);
     void phi_analytic_biaxial(intElement& intNode);

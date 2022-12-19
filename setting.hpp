@@ -13,7 +13,8 @@ namespace Par{
     // Basic Setting
     const extern int opt_sim_type;  // The simulation type;\
                                         1:= Plane strain,\
-                                        2:= Plane stress
+                                        2:= Plane stress,\
+                                        3:= Temperature solver
 
     const extern int opt_int_init;  // The init. opt. for internal node;\
                                         1:= Regular,\
@@ -22,7 +23,10 @@ namespace Par{
     const extern int opt_BEM;       // The option for BEM calculation;\
                                         1:= Type 1 calculation -> Calculate A, B, C, and D,\
                                         2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn
-
+    const extern int opt_prop_cal;  // The option for BEM calculating property;\
+                                    0:= Basic calculation\
+                                    1:= Calculating the radial stress strain
+                                    
 // #==================================================#
 // +--------------- [PROGRAM PARAMETER] --------------+
 // #==================================================#
@@ -75,19 +79,24 @@ namespace Par{
     // Bottom surface
     const extern double trac_b_x;
     const extern double trac_b_y;
+    const extern double temp_b;     // Bottom temperature
     // Right surface
     const extern double trac_r_x;
     const extern double trac_r_y;
+    const extern double temp_r;     // Right temperature
     // Top surface
     const extern double trac_t_x;
     const extern double trac_t_y;
+    const extern double temp_t;     // Top temperature
     // Left surface
     const extern double trac_l_x;
     const extern double trac_l_y;
+    const extern double temp_l;     // Left temperature
 
     // Traction Parameter for Circular geometry\
        -> traction is only a pressure
     const extern double trac_press;
+    const extern double Temp;
 
     // -----------------------------------
     // Parameter of Geometry inside Domain
@@ -105,6 +114,7 @@ namespace Par{
     const extern std::vector<double> Gin_Rot;       // Geometry rotation in CCW direction by degree
     const extern std::vector<double> In_pressure;   // The value of internal pressure\
                                                        -> Traction for internal boundary still limited to internal pressure
+    const extern std::vector<double> In_temp;       // The value of internal temperature
 
 // #==================================================#
 // +------------- [SIMULATION PARAMETER] -------------+

@@ -48,7 +48,13 @@ public:
     void solve_F(element& elm, std::vector<element>& in_elm);
     void solve_phi(element& elm, std::vector<element>& in_elm);
     void calculate_internal_phi(intElement& intElm, const element& elm, const std::vector<element>& in_elm);
+    
+    // Temperature Solver
+    void solve_T(element& elm, std::vector<element>& in_elm);
+    void calculate_internal_T(intElement& intElm, const element& elm, const std::vector<element>& in_elm);
+
     void TEST_BEM(element& elm, std::vector<element>& in_elm);
+    void CALC_theta();
 };
 
 // - Solve the Laplace of F

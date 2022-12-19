@@ -1,5 +1,7 @@
 #include "BEM.hpp"
 
+// ===========================================================================================
+// ===========================================================================================
 // Matrix Element calculation
 // Representative to integral(dGdn * dL)
 double calcBEM::calc_Aij(double a_ij, double k_ij, double L){
@@ -8,7 +10,7 @@ double calcBEM::calc_Aij(double a_ij, double k_ij, double L){
 
     // Calculate internal variable
     _tan = std::atan2(a_ij*L, ((a_ij * a_ij) + (k_ij * k_ij) - (L * L)/4.0));
-    if (a_ij == 0 && k_ij == 0){
+    if (a_ij == 0){
         _tan = 0;
     }
     
@@ -25,7 +27,7 @@ double calcBEM::calc_Bij(double a_ij, double k_ij, double L){
     var1 = std::log(std::sqrt( std::pow(a_ij, 2) + std::pow((k_ij + L/2.0), 2) ));
     var2 = std::log(std::sqrt( std::pow(a_ij, 2) + std::pow((k_ij - L/2.0), 2) ));
     _tan = std::atan2(a_ij*L, (std::pow(a_ij,2) + std::pow(k_ij,2) - std::pow(L/2.0,2)));
-    if (a_ij == 0 && k_ij == 0){
+    if (a_ij == 0){
         _tan = 0;
     }
 
@@ -37,6 +39,10 @@ double calcBEM::calc_Bij(double a_ij, double k_ij, double L){
         + a_ij * _tan
         - L
     );
+
+    if (a_ij == 0 && k_ij == 0){
+        Bij = L/(2.0 * M_PI) * ( var1 - 1 );
+    }
     return Bij;
 }
 // Representative to integral(dWdn * dL)
@@ -50,7 +56,7 @@ double calcBEM::calc_Cij(double a_ij, double k_ij, double L){
     var1 = std::log(std::sqrt( std::pow(a_ij, 2) + std::pow(par1, 2) ));
     var2 = std::log(std::sqrt( std::pow(a_ij, 2) + std::pow(par2, 2) ));
     _tan = std::atan2(a_ij*L, (std::pow(a_ij,2) + std::pow(k_ij,2) - std::pow(L/2.0,2)));
-    if (a_ij == 0 && k_ij == 0){
+    if (a_ij == 0){
         _tan = 0;
     }
     
@@ -75,7 +81,7 @@ double calcBEM::calc_Dij(double a_ij, double k_ij, double L){
     var1 = std::log(std::sqrt( std::pow(a_ij, 2) + std::pow(par1, 2) ));
     var2 = std::log(std::sqrt( std::pow(a_ij, 2) + std::pow(par2, 2) ));
     _tan = std::atan2(a_ij*L, (std::pow(a_ij,2) + std::pow(k_ij,2) - std::pow(L/2.0,2)));
-    if (a_ij == 0 && k_ij == 0){
+    if (a_ij == 0){
         _tan = 0;
     }
     
@@ -92,6 +98,8 @@ double calcBEM::calc_Dij(double a_ij, double k_ij, double L){
     return Dij;
 }
 
+// ===========================================================================================
+// ===========================================================================================
 // Matrix Element calculation
 // Representative to Dewangga Code: K1
 double calcBEM::calc_G_dL(double x_0, double y_0, double x, double y, double x_n, double y_n, double L){
@@ -166,6 +174,8 @@ double calcBEM::calc_dWdn_dL(double x_0, double y_0, double x, double y, double 
     return dW_dn_dL;
 }
 
+// ===========================================================================================
+// ===========================================================================================
 // Local parameter calculation tools
 double calcBEM::calc_a(double x_0, double y_0, double x_m, double y_m, double x_n, double y_n){
     // Calculation of a\
@@ -197,6 +207,9 @@ void calcBEM::swap_col(Eigen::MatrixXd& A, Eigen::MatrixXd& B, int col){
 }
 
 
+// ===========================================================================================
+// ===========================================================================================
+// ==================== TESTING of BEM CALCULATION ==================== //
 // Calculate the other F boundary value
 void calcBEM::TEST_BEM(element& elm, std::vector<element>& in_elm){
     // initialization generate internal node starting log
@@ -277,3 +290,26 @@ void calcBEM::TEST_BEM(element& elm, std::vector<element>& in_elm){
 	printf("<-> Calculating F comp. time           [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
+// Calculate the other F boundary value
+void calcBEM::CALC_theta(){
+    intElement _test;
+    double N = 1000;
+    for (int i = 0; i < (int)N; i++){
+        for (int j = 0; j < (int)N; j++){
+            _test.x.push_back(j/N);
+            _test.y.push_back(i/N);
+        }
+    }
+
+    double xm = 0.5;
+    double ym = 0.5;
+
+    for (int i = 0; i < _test.x.size(); i++){
+        double a = this->calc_a(_test.x[i],_test.y[i],xm,ym,0,1);
+        double k = this->calc_k(_test.x[i],_test.y[i],xm,ym,0,1);
+        _test.phi.push_back(this->calc_Aij(a,k,0.2));
+    }
+
+    save.save_Test(_test);
+
+}

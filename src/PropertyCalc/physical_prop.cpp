@@ -44,6 +44,19 @@ void propertyCalc::calculate_property(intElement& intNode){
     _time = clock() - _time;
 	printf("<-> Displacement calculation\n");
     printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+
+    // Calculate the properties transformation
+    // Initialization strain calculation log
+    if (Par::opt_prop_cal == 1){
+        printf("\nTransformation calculation ...\n");
+        _time = clock() - _time;
+        this->coor_transform(intNode);
+        
+        // Displaying the computational time
+        _time = clock() - _time;
+        printf("<-> Transformation calculation\n");
+        printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+    }
 }
 
 void propertyCalc::phi_analytic_biaxial(intElement& intNode){
@@ -151,4 +164,36 @@ void propertyCalc::calculate_strain(intElement& intNode){
 void propertyCalc::calculate_disp(intElement& intNode)
 {
     // In development ...
+}
+
+void propertyCalc::coor_transform(intElement& intNode){
+    intNode.s_rr.resize(intNode.num,0.0e0);
+    intNode.s_tt.resize(intNode.num,0.0e0);
+    intNode.t_rt.resize(intNode.num,0.0e0);
+    intNode.e_rr.resize(intNode.num,0.0e0);
+    intNode.e_tt.resize(intNode.num,0.0e0);
+    intNode.e_rt.resize(intNode.num,0.0e0);
+    
+    // Variable for internal calculation
+    double s11,s12,s22,e11,e12,e22;
+    double theta, _sin2t, _cos2t;
+    for (int i = 0; i < intNode.num; i++){
+        theta = std::atan2(intNode.y[i],intNode.x[i]);
+        _sin2t = std::sin(2 * theta);
+        _cos2t = std::cos(2 * theta);
+        s11 = intNode.s_xx[i];
+        s12 = intNode.t_xy[i];
+        s22 = intNode.s_yy[i];
+        e11 = intNode.e_xx[i];
+        e12 = intNode.e_xy[i];
+        e22 = intNode.e_yy[i];
+
+        // Calculation of transformation
+        intNode.s_rr[i] = (s11 + s22)/2.0 + ((s11 - s22)/2.0)*_cos2t + s12*_sin2t;
+        intNode.t_rt[i] = - ((s11 - s22)/2.0)*_sin2t + s12*_cos2t;
+        intNode.s_tt[i] = (s11 + s22)/2.0 - ((s11 - s22)/2.0)*_cos2t - s12*_sin2t;
+        intNode.e_rr[i] = (e11 + e22)/2.0 + ((e11 - e22)/2.0)*_cos2t + e12*_sin2t;;
+        intNode.e_rt[i] = - ((e11 - e22)/2.0)*_sin2t + e12*_cos2t;;
+        intNode.e_tt[i] = (e11 + e22)/2.0 - ((e11 - e22)/2.0)*_cos2t - e12*_sin2t;;
+    }
 }

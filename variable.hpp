@@ -35,6 +35,11 @@ public:
     std::vector<double> dpdn;   // Airy stress function normal plane derivative
     std::vector<bool> F_type;   // The type of given boundary condition for F   (true: neumann, false: dirichlet)
     std::vector<bool> p_type;   // The type of given boundary condition for phi (true: neumann, false: dirichlet)
+
+    // Boundary condition Dirichet and Neumann
+    std::vector<double> T;      // Temperature laplacian : Del^2(T)
+    std::vector<double> dTdn;   // Temperature normal plane derivative
+    std::vector<bool> T_type;   // The type of given boundary condition for T   (true: neumann, false: dirichlet)
 };
 
 // Internal Element class: Store the property data of each node inside the domain
@@ -56,6 +61,7 @@ public:
     // Boundary condition Dirichet and Neumann
     std::vector<double> phi;      // Airy stress function (phi)
     std::vector<double> phi_an;   // Airy stress function of analytic solution (phi)
+    std::vector<double> T;        // Temperature (T)
     
     // ============= STRESS =============
     // Stress properties (cartesian)

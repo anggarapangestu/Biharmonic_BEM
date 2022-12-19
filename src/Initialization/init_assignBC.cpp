@@ -72,8 +72,11 @@ void initialization::p_val_calc(element& elm, int ID){
     for (int i = 0; i < elm.num; i++){
         dpdx_node[i+1] = dpdx_node[i] - (dir * elm.L[i] * elm.Ty[i]);
         dpdy_node[i+1] = dpdy_node[i] + (dir * elm.L[i] * elm.Tx[i]);
+        // std::cout << "The node x diff value :" << dpdx_node[i+1] << std::endl;
+        // std::cout << "The node y diff value :" << dpdy_node[i+1] << std::endl;
     }
 
+    
     // Update for symmetric extremes (work as well, but still need to change the value of F and phi)
     double max_x = 0, max_y = 0, min_x = 0, min_y = 0;
     for (int i = 0; i < dpdx_node.size(); i++){
@@ -93,10 +96,14 @@ void initialization::p_val_calc(element& elm, int ID){
         _dpdx = 0.5 * (dpdx_node[i+1] + dpdx_node[i]);
         _dpdy = 0.5 * (dpdy_node[i+1] + dpdy_node[i]);
         elm.dpdn[i] = _dpdx * elm.xn[i] + _dpdy * elm.yn[i];
-        if (elm.dpdn[i] == 0){
-            elm.p[i] = 0;
-            elm.p_type[i] = false;
-        }
+        // std::cout << "The node x value :" << _dpdx << std::endl;
+        // std::cout << "The normal x :" << elm.xn[i] << std::endl;
+        // std::cout << "The node y value :" << _dpdy << std::endl;
+        // std::cout << "The normal y :" << elm.yn[i] << std::endl;
+        // if (elm.dpdn[i] == 0){
+        //     elm.p[i] = 0;
+        //     elm.p_type[i] = false;
+        // }
     }
 
     
@@ -109,4 +116,81 @@ void initialization::p_val_calc(element& elm, int ID){
             elm.p[i] = Par::trac_t_y/2.0 * elm.xm[i] * elm.xm[i] + Par::trac_r_x/2.0 * elm.ym[i] * elm.ym[i];
         }
     }
+}
+
+
+// ================================================================================
+// ================================================================================
+// The calculation of F boundary value
+void initialization::T_val_calc(element& elm, int ID){
+    // Marking whether a base or inner geometry
+    bool base;
+    if (ID >= 0){
+        base = false;
+    }else{
+        base = true;
+    }
+
+    // Define the calculation type
+    int T_calc_type = 2;
+    
+    if (T_calc_type == 1){
+        // Constant neumann value dTdn = 0
+        double _guess_value = 0.0e0;            // Still can be changed
+        for (int i = 0; i < elm.num; i++){
+            elm.dTdn[i] = _guess_value;
+        }
+    }
+    else if (T_calc_type == 2){
+        // Constant dirichlet value T = prescribed
+        if (base == true){
+            for (int i = 0; i < elm.num; i++){
+                elm.T[i] = Par::Temp;
+                elm.T_type[i] = false;
+            }
+        }else{
+            for (int i = 0; i < elm.num; i++){
+                elm.T[i] = Par::In_temp[ID];
+                elm.T_type[i] = false;
+            }
+        }
+    }
+    else if (T_calc_type == 3){
+        // Find the position at each boundary
+        double max_x = 0, max_y = 0, min_x = 0, min_y = 0;
+        for (int i = 0; i < elm.num; i++){
+            max_x = elm.xm[i] > max_x ? elm.xm[i] : max_x;
+            max_y = elm.ym[i] > max_y ? elm.ym[i] : max_y;
+            min_x = elm.xm[i] < min_x ? elm.xm[i] : min_x;
+            min_y = elm.ym[i] < min_y ? elm.ym[i] : min_y;
+        }
+
+        // Constant dirichlet value T = prescribed
+        for (int i = 0; i < elm.num; i++){
+            if (elm.xm[i] == max_x){
+                // Right boundary
+                elm.T[i] = Par::temp_r;
+                elm.T_type[i] = false; // (dirichet)
+            }
+            else if (elm.xm[i] == min_x){
+                // Left boundary
+                elm.T[i] = Par::temp_l;
+                elm.T_type[i] = false; // (dirichet)
+            }
+            else if (elm.ym[i] == min_y){
+                // Bottom boundary
+                elm.T[i] = Par::temp_b;
+                elm.T_type[i] = true; // (neumann)
+            }
+            else if (elm.ym[i] == max_y){
+                // Top boundary
+                elm.T[i] = Par::temp_t;
+                elm.T_type[i] = true; // (neumann)
+            }
+            
+        }
+    }
+
+    // Other Case 
+    /* Code lies here ... */
 }

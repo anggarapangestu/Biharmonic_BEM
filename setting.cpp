@@ -7,7 +7,8 @@ namespace Par{
     // Basic Setting
     const int opt_sim_type = 2;  // The simulation type;\
                                     1:= Plane strain,\
-                                    2:= Plane stress
+                                    2:= Plane stress,\
+                                    3:= Temperature solver
 
     const int opt_int_init = 1;  // The init. opt. for internal node;\
                                     1:= Regular,\
@@ -16,6 +17,10 @@ namespace Par{
     const int opt_BEM = 1;       // The option for BEM calculation;\
                                     1:= Type 1 calculation -> Calculate A, B, C, and D,\
                                     2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn - (Not works)
+
+    const int opt_prop_cal = 1;  // The option for BEM calculating property;\
+                                    0:= Basic calculation\
+                                    1:= Calculating the radial stress strain
 
 // #==================================================#
 // +--------------- [SAVING PARAMETER] ---------------+
@@ -58,56 +63,62 @@ namespace Par{
     */
 
     // Base Geometry Parameter
-    const int G_type = 1;    // Type of geometry: \
+    const int G_type = 2;    // Type of geometry: \
                                     * 1 := Rectangular\
                                     * 2 := Circular/Oval
 
-    const double dom_Lx = 4.0e0;    // Base geometry x length
-    const double dom_Ly = 4.0e0;    // Base geometry y length
+    const double dom_Lx = 2.0e0;    // Base geometry x length
+    const double dom_Ly = 2.0e0;    // Base geometry y length
     
     // Traction Parameter for Rectangular geometry\
        -> traction is constant along the surface (in Pascal)
     // Bottom surface
-    const double trac_b_x = 0.0e3;
-    const double trac_b_y = -1.0e3;
+    const double trac_b_x = 0.0e3;  // Bottom traction in x direction
+    const double trac_b_y = 0.0e3;  // Bottom traction in y direction
+    const double temp_b = 0.0e0;    // Bottom temperature
     // Right surface
-    const double trac_r_x = 1.0e3;
-    const double trac_r_y = 0.0e3;
+    const double trac_r_x = 1.0e3;  // Right traction in x direction
+    const double trac_r_y = 0.0e3;  // Right traction in y direction
+    const double temp_r = 300.0e0;  // Right temperature
     // Top surface
-    const double trac_t_x = 0.0e3;
-    const double trac_t_y = 1.0e3;
+    const double trac_t_x = 0.0e3;  // Top traction in x direction
+    const double trac_t_y = 0.0e3;  // Top traction in y direction
+    const double temp_t = 0.0e0;    // Top temperature
     // Left surface
-    const double trac_l_x = -1.0e3;
-    const double trac_l_y = 0.0e3;
+    const double trac_l_x = -1.0e3; // Left traction in x direction
+    const double trac_l_y = 0.0e3;  // Left traction in y direction
+    const double temp_l = 500.0e0;  // Left temperature
 
     // Traction Parameter for Circular geometry\
        -> traction is only a pressure
     const double trac_press = 0.0e3;
+    const double Temp = 300.0;
 
     // Parameter of Geometry inside Domain
     // ***********************************
     const int N_Gin = 1;        // Number of geometry inside the domain (multiply connected)
 
     // Parameter List of Geometry Inside the Domain 
-    const std::vector<int> Gin_type = {2, 2, 2, 2, 2};   // Type of geometry: \
+    const std::vector<int> Gin_type = {2, 1, 2, 2, 2};   // Type of geometry: \
                                                         * 1 := Rectangular\
                                                         * 2 := Circular/Oval
-    const std::vector<double> Gin_Xlen = {1.0e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};        // Geometry length in x direction
-    const std::vector<double> Gin_Ylen = {1.0e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};        // Geometry length in y direction
+    const std::vector<double> Gin_Xlen = {1.5e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};        // Geometry length in x direction
+    const std::vector<double> Gin_Ylen = {1.5e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};        // Geometry length in y direction
     const std::vector<double> Gin_Xcen_pos = {0.0e0, 1.0e0, 1.0e0, -1.0e0, -1.0e0};  // Geometry center x position
     const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0, -1.0e0, -1.0e0, 1.0e0};  // Geometry center y position
-    const std::vector<double> Gin_Rot = {0.0e0, 0.0e0, 0.0e0, 0.0e0, 0.0e0};         // Geometry rotation in CCW direction (in degree)
-    const std::vector<double> In_pressure = {0.0e0, 0.0e0, 0.0e0, 0.0e0, 0.0e0};     // The value of internal pressure\
+    const std::vector<double> Gin_Rot = {0.0e0, 45.0e0, 0.0e0, 0.0e0, 0.0e0};         // Geometry rotation in CCW direction (in degree)
+    const std::vector<double> In_pressure = {1.0e3, 0.0e0, 0.0e0, 0.0e0, 0.0e0};     // The value of internal pressure\
                                                                                         -> Traction for internal boundary still limited to internal pressure
+    const std::vector<double> In_temp = {500.0e0, 500.0e0, 500.0e0, 500.0e0, 500.0e0}; // The value of internal temperature\
 
 // #==================================================#
 // +------------- [SIMULATION PARAMETER] -------------+
 // #==================================================#
     // Panel Element Parameter
-    const double len = 0.04e0;     // Panel length
+    const double len = 0.02e0;     // Panel length
 
     // Internal Node Parameter
-    const double spc = 0.04e0;      // Internal node spacing
+    const double spc = 0.01e0;      // Internal node spacing
     const double dist_fac = 4.0e0; // The spacing factor of finer region
 
     // Neighbor Parameter

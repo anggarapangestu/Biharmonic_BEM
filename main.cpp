@@ -84,45 +84,40 @@ int main(){
     std::cout << "+---------------- BEM SOLVER LOG -----------------+\n";
     std::cout << "#=================================================#\n";
     
+    // Testing
+    // BEMstep.CALC_theta();
+
     // Initialize the BEM paramter
     BEMstep.Define_BEM(PanelElement, InnerElement);    
     // BEMstep.TEST_BEM(PanelElement, InnerElement);
 
-    // Calculate the other boundary element value
-    BEMstep.solve_F(PanelElement, InnerElement);
-    BEMstep.solve_phi(PanelElement, InnerElement);
+    if (Par::opt_sim_type != 3){
+        // Calculate the other boundary element value
+        BEMstep.solve_F(PanelElement, InnerElement);
+        BEMstep.solve_phi(PanelElement, InnerElement);
 
-    // Calculate the phi value at the internal domain node
-    BEMstep.calculate_internal_phi(InternalNode, PanelElement, InnerElement);
-    prop_step.phi_analytic_biaxial(InternalNode);
-
-/*
-    Eigen::MatrixXd A = Eigen::MatrixXd::Zero(2,2);
-    Eigen::VectorXd B = Eigen::VectorXd::Zero(2);
-    for (int i = 0; i < A.rows(); i++){
-        for (int j = 0; j < A.cols(); j++){
-            A(i, j) = 1+i+j;
-            B(i) = 7+j+i*2;
-        }
+        // Calculate the phi value at the internal domain node
+        BEMstep.calculate_internal_phi(InternalNode, PanelElement, InnerElement);
+        prop_step.phi_analytic_biaxial(InternalNode);
     }
-    std::cout << A << std::endl;
-    std::cout << B << std::endl;
-    
-    Eigen::VectorXd bi = A.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(B);
-
-    std::cout << bi << std::endl;
-*/
+    else if (Par::opt_sim_type == 3){
+        // Calculate the Temperature type
+        BEMstep.solve_T(PanelElement, InnerElement);
+        BEMstep.calculate_internal_T(InternalNode, PanelElement, InnerElement);
+    }
 
     // =======================================
     // ======= CALCULATING PROPERTIES ========
     // =======================================
-    // BEM calculation HEADER
-    std::cout << std::endl;
-    std::cout << "#=================================================#\n";
-    std::cout << "+------------ PROPERTIES CALCULATION -------------+\n";
-    std::cout << "#=================================================#\n";
-    // Calculate all properties at the domain
-    prop_step.calculate_property(InternalNode);
+    if (Par::opt_sim_type != 3){
+        // BEM calculation HEADER
+        std::cout << std::endl;
+        std::cout << "#=================================================#\n";
+        std::cout << "+------------ PROPERTIES CALCULATION -------------+\n";
+        std::cout << "#=================================================#\n";
+        // Calculate all properties at the domain
+        prop_step.calculate_property(InternalNode);
+    }
     
 
     // ============================
@@ -132,8 +127,15 @@ int main(){
     std::cout << std::endl;
     std::cout << "+---------------- SAVING DATA LOG ----------------+\n";
     // Write the element data
-    save.write_internal_data(InternalNode);
-    save.write_BEM_data(PanelElement, InnerElement);
+    if (Par::opt_sim_type != 3){
+        // Saving biharmonic data
+        save.write_internal_data(InternalNode);
+        save.write_BEM_data(PanelElement, InnerElement);
+    }else if (Par::opt_sim_type == 3){
+        // Saving temperature laplace data
+        save.write_internal_data_temp(InternalNode);
+        save.write_BEM_data_temp(PanelElement, InnerElement);
+    }
 
     // Displaying the computational time
     _time = clock() - _time;

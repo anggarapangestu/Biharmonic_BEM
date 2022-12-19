@@ -20,6 +20,7 @@ private:
     // Boundary condition calculation
     void F_val_calc(element& elm, int ID);
     void p_val_calc(element& elm, int ID);
+    void T_val_calc(element& elm, int ID);
 
 public:
     // The class public method belong here
