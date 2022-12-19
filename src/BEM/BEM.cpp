@@ -1,11 +1,14 @@
 #include "BEM.hpp"
+
 // ================================================================================
+// ============================== BEM INITIALIZATION ==============================
 // ================================================================================
+// Initialize the BEM internal variable
 void calcBEM::Define_BEM(const element& elm, const std::vector<element>& in_elm){
     // initialization generate internal node starting log
     printf("\nBEM method initialization ...\n");
 
-    // Initialize the size
+    // Initialize the matrix size
     this->N = 0;
     N += elm.num;
     for (int ID = 0; ID < Par::N_Gin; ID++){
@@ -41,11 +44,12 @@ void calcBEM::Define_BEM(const element& elm, const std::vector<element>& in_elm)
         }
     }
     
-    printf("<+> Initialization done\n");
+    printf("<+> BEM Initialization done\n");
     printf("<+> Total number of boundary element  : %8d\n", N);
 }
 
 // ================================================================================
+// ============================== BIHARMONIC SOLVER ===============================
 // ================================================================================
 // Calculate the other F boundary value
 void calcBEM::solve_F(element& elm, std::vector<element>& in_elm){
@@ -196,8 +200,6 @@ void calcBEM::solve_F(element& elm, std::vector<element>& in_elm){
 	printf("<-> Calculating F comp. time           [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
-// ================================================================================
-// ================================================================================
 // Calculate the other phi boundary value
 void calcBEM::solve_phi(element& elm, std::vector<element>& in_elm){
     // initialization generate internal node starting log
@@ -364,8 +366,6 @@ void calcBEM::solve_phi(element& elm, std::vector<element>& in_elm){
 	printf("<-> Calculating phi comp. time         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
-// ================================================================================
-// ================================================================================
 // Calculate phi inside the domain region
 void calcBEM::calculate_internal_phi(intElement& intElm, const element& elm, const std::vector<element>& in_elm){
     // initialization generate internal node starting log
@@ -456,12 +456,10 @@ void calcBEM::calculate_internal_phi(intElement& intElm, const element& elm, con
     printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
-
-
 // ================================================================================
-// ========================= TRIAL FOR TEMPERATURE SOLVER =========================
+// ============================== TEMPERATURE SOLVER ==============================
 // ================================================================================
-// Calculate the other F boundary value
+// Calculate the other T boundary value
 void calcBEM::solve_T(element& elm, std::vector<element>& in_elm){
     // initialization generate internal node starting log
     printf("\nBEM calculating T ...\n");
@@ -611,9 +609,7 @@ void calcBEM::solve_T(element& elm, std::vector<element>& in_elm){
 	printf("<-> Calculating T comp. time           [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
-// ================================================================================
-// ================================================================================
-// Calculate phi inside the domain region
+// Calculate T inside the domain region
 void calcBEM::calculate_internal_T(intElement& intElm, const element& elm, const std::vector<element>& in_elm){
     // initialization generate internal node starting log
     printf("\nBEM calculating internal node temperature ...\n");

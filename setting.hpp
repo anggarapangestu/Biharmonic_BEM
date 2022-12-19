@@ -30,11 +30,6 @@ namespace Par{
     // 1:= Type 1 calculation -> Calculate A, B, C, and D,
     // 2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn (NOT WORK, may be deleted)
     const extern int opt_BEM;
-    
-    // // The flag of additional cylindrical coordinate evaluation
-    // // 0:= Basic cartesian coordinate,
-    // // 1:= Add the cylindrical coordinate
-    // const extern int opt_cylinder;
                                     
 // #==================================================#
 // +--------------- [PROGRAM PARAMETER] --------------+
@@ -134,6 +129,8 @@ namespace Par{
     const extern std::vector<double> Gin_Xcen_pos;  // Geometry center x position
     const extern std::vector<double> Gin_Ycen_pos;  // Geometry center y position
     const extern std::vector<double> Gin_Rot;       // Geometry rotation in CCW direction by degree
+    
+    // Boundary value
     const extern std::vector<double> In_pressure;   // The value of internal pressure\
                                                        -> Traction for internal boundary still limited to internal pressure
     const extern std::vector<double> In_temp;       // The value of boundary temperature value 

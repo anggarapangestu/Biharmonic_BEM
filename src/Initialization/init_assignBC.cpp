@@ -99,10 +99,14 @@ void initialization::p_val_calc(element& elm, int ID){
         elm.dpdn[i] = _dpdx * elm.xn[i] + _dpdy * elm.yn[i];
         
         // In case the traction is zero then phi = 0 -> change to dirichlet (Need a validation)
-        // if (elm.dpdn[i] == 0){
-        //     elm.p[i] = 0;
-        //     elm.p_type[i] = false;
-        // }
+        if (elm.dpdn[i] == 0){
+            // Only done for internal boundary
+            // if(base == false)
+            {
+                elm.p[i] = 0;
+                elm.p_type[i] = false;
+            }
+        }
     }
 
     
@@ -110,9 +114,16 @@ void initialization::p_val_calc(element& elm, int ID){
     // Calculate the phi (If the algorithm is known)
     bool given_P = false;
     if (given_P == true){
+        // Internal variables definition
+        double A, B, C;
+        A = Par::trac_t_y / 2.0;
+        B = 0.0;
+        C = Par::trac_r_x / 2.0;
+        
         for (int i = 0; i < elm.num; i++){
             // Hard coded from a given solution
-            elm.p[i] = Par::trac_t_y/2.0 * elm.xm[i] * elm.xm[i] + Par::trac_r_x/2.0 * elm.ym[i] * elm.ym[i];
+            elm.p[i] = A * elm.xm[i] * elm.xm[i] + B * elm.xm[i] * elm.ym[i] + C * elm.ym[i] * elm.ym[i];
+            elm.p_type[i] = false;
         }
     }
 }

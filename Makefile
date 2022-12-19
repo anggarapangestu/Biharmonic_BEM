@@ -16,7 +16,7 @@
 DEST		= output/
 COMPILER	= g++
 PROGRAM		= program
-PROGRAM_LOG	= log
+PROGRAM_LOG	= msslog
 
 # ==========================================
 # ============ PROGRAM COMPILE =============
@@ -70,12 +70,12 @@ run:
 # ============= SIMULATION LOG =============
 # ==========================================
 # List of cpp source file path for log
-LOG			= log.cpp\
+SRCS_LOG	= log.cpp\
 			setting.cpp\
 			src/Saving/save_data.cpp
 
 # Object file path for log
-OBJS_LOG	= $(LOG:%.cpp=%.o)            # Change from SRCS the ".cpp" into ".o"
+OBJS_LOG	= $(SRCS_LOG:%.cpp=%.o)            # Change from SRCS the ".cpp" into ".o"
 
 # Target to compile and link all log
 $(PROGRAM_LOG):	OBPR_LOG $(OBJS_LOG)
@@ -89,7 +89,7 @@ OBPR_LOG:
 			@echo "Start building the log object file ..."
 
 # Target to run the log message
-run_log: $(PROGRAM_LOG)
+log: $(PROGRAM_LOG)
 			@./$(PROGRAM_LOG)
 
 # ==========================================

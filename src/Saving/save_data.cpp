@@ -39,7 +39,9 @@ void dataSaving::simulation_log(){
 
 	// Additional calculation data
 	printf("\n+---------------- Additional Data ----------------+\n");
-	printf("Base internal node spacing          :   %8.4f m\n", Par::spc);
+	printf("Geometry x length                   :   %8.4f m\n", Par::dom_Lx);
+    printf("Geometry y length                   :   %8.4f m\n", Par::dom_Ly);
+    printf("Base internal node spacing          :   %8.4f m\n", Par::spc);
     printf("Base panel length                   :   %8.4f m\n", Par::len);
     printf("Number of boundary surface          :   %8d \n", Par::N_Gin + 1);
     printf("Support domain radius factor        :   %8.2f \n", Par::R_s);
@@ -85,6 +87,8 @@ void dataSaving::simulation_log(){
 
 	this->save << std::fixed << std::setprecision(4)
                << "+---------------- Additional Data ----------------+\n"
+               << "Domain x length                     :   "; save.width(8); save << std::right << Par::dom_Lx << " m\n"
+               << "Domain x length                     :   "; save.width(8); save << std::right << Par::dom_Ly << " m\n"
                << "Base internal node spacing          :   "; save.width(8); save << std::right << Par::spc << " m\n"
                << "Base panel length                   :   "; save.width(8); save << std::right << Par::len << " m\n"
                << "Number of boundary surface          :   "; save.width(8); save << std::right << Par::N_Gin + 1 << "\n"
