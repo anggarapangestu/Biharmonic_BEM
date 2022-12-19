@@ -3,9 +3,9 @@
 #endif
 
 int main(){
+    // Print and save the simulation log
     dataSaving save;
-
-    // Print simulation log
     save.simulation_log();
+
     return 0;
 }

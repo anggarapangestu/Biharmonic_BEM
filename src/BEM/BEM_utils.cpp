@@ -2,7 +2,7 @@
 
 // ===========================================================================================
 // ===========================================================================================
-// Matrix Element calculation
+// Matrix Element calculation [TYPE 1]
 // Representative to integral(dGdn * dL)
 double calcBEM::calc_Aij(double a_ij, double k_ij, double L){
     // Internal variable declaration
@@ -39,10 +39,6 @@ double calcBEM::calc_Bij(double a_ij, double k_ij, double L){
         + a_ij * _tan
         - L
     );
-
-    if (a_ij == 0 && k_ij == 0){
-        Bij = L/(2.0 * M_PI) * ( var1 - 1 );
-    }
     return Bij;
 }
 // Representative to integral(dWdn * dL)
@@ -100,7 +96,27 @@ double calcBEM::calc_Dij(double a_ij, double k_ij, double L){
 
 // ===========================================================================================
 // ===========================================================================================
-// Matrix Element calculation
+// Local parameter calculation tools [TYPE 1]
+double calcBEM::calc_a(double x_0, double y_0, double x_m, double y_m, double x_n, double y_n){
+    // Calculation of a\
+       -> the projection length of distance x_0 to x_m\
+       -> a = (x_m - x_0) dot hat(n)
+    double a;
+    a = (x_m - x_0) * x_n + (y_m - y_0) * y_n;
+    return a;
+}
+double calcBEM::calc_k(double x_0, double y_0, double x_m, double y_m, double x_n, double y_n){
+    // Calculation of k\
+       -> the length from nearest point intersection to x_m\
+       -> k = (x_m - x_0) dot hat(ell)
+    double k;
+    k = -(x_m - x_0) * y_n + (y_m - y_0) * x_n;
+    return k;
+}
+
+// ===========================================================================================
+// ===========================================================================================
+// Matrix Element calculation [TYPE 2]
 // Representative to Dewangga Code: K1
 double calcBEM::calc_G_dL(double x_0, double y_0, double x, double y, double x_n, double y_n, double L){
     // Mathematical Expression of function G
@@ -115,7 +131,6 @@ double calcBEM::calc_G_dL(double x_0, double y_0, double x, double y, double x_n
     }else{          // Non singular case
         G_dL = (L / (2.0 * M_PI)) * std::log(_r);
     }
-
     return G_dL;
 }
 // Representative to Dewangga Code: K2
@@ -132,7 +147,6 @@ double calcBEM::calc_W_dL(double x_0, double y_0, double x, double y, double x_n
     }else{          // Non singular case
         W_dL = (L / (8.0 * M_PI)) * std::pow(_r, 2) * (std::log(_r) - 1);
     }
-
     return W_dL;
 }
 // Representative to Dewangga Code: G1
@@ -151,7 +165,6 @@ double calcBEM::calc_dGdn_dL(double x_0, double y_0, double x, double y, double 
     }else{          // Non singular case
         dG_dn_dL = (L / (2.0 * M_PI)) * (x_dot_n / std::pow(_r, 2));
     }
-
     return dG_dn_dL;
 }
 // Representative to Dewangga Code: G2
@@ -170,46 +183,27 @@ double calcBEM::calc_dWdn_dL(double x_0, double y_0, double x, double y, double 
     }else{          // Non singular case
         dW_dn_dL = (L / (8.0 * M_PI)) * x_dot_n * (2 * std::log(_r) - 1);
     }
-
     return dW_dn_dL;
 }
 
 // ===========================================================================================
 // ===========================================================================================
-// Local parameter calculation tools
-double calcBEM::calc_a(double x_0, double y_0, double x_m, double y_m, double x_n, double y_n){
-    // Calculation of a\
-       -> the projection length of distance x_0 to x_m\
-       -> a = (x_m - x_0) dot hat(n)
-    double a;
-    a = (x_m - x_0) * x_n + (y_m - y_0) * y_n;
-    return a;
-}
-double calcBEM::calc_k(double x_0, double y_0, double x_m, double y_m, double x_n, double y_n){
-    // Calculation of k\
-       -> the length from nearest point intersection to x_m\
-       -> k = (x_m - x_0) dot hat(ell)
-    double k;
-    k = -(x_m - x_0) * y_n + (y_m - y_0) * x_n;
-    return k;
-}
-
 // Matrix operator
 void calcBEM::swap_col(Eigen::MatrixXd& A, Eigen::MatrixXd& B, int col){
-    // Perform the colomn swap
+    // Perform the colomn swap between matrix A and B
     double _temp;
     for (int i = 0; i < A.rows(); i++){
         _temp = -A(i,col);
         A(i,col) = -B(i,col);
         B(i,col) = _temp;
     }
-    // std::cout << "[LOG] Matrix Swapped\n";
 }
 
 
 // ===========================================================================================
 // ===========================================================================================
-// ==================== TESTING of BEM CALCULATION ==================== //
+// The code below for TESTING !!!
+
 // Calculate the other F boundary value
 void calcBEM::TEST_BEM(element& elm, std::vector<element>& in_elm){
     // initialization generate internal node starting log
@@ -255,8 +249,8 @@ void calcBEM::TEST_BEM(element& elm, std::vector<element>& in_elm){
                 // Inner geometry
                 xj = in_elm[elmGIN[j]].xm[elmID[j]];
                 yj = in_elm[elmGIN[j]].ym[elmID[j]];
-                xj = in_elm[elmGIN[j]].xn[elmID[j]];
-                yj = in_elm[elmGIN[j]].yn[elmID[j]];
+                xn = in_elm[elmGIN[j]].xn[elmID[j]];
+                yn = in_elm[elmGIN[j]].yn[elmID[j]];
                 L  = in_elm[elmGIN[j]].L[elmID[j]];
             }
 
@@ -287,11 +281,12 @@ void calcBEM::TEST_BEM(element& elm, std::vector<element>& in_elm){
 
     // Displaying the computational time
     _time = clock() - _time;
-	printf("<-> Calculating F comp. time           [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+    printf("<-> Finish testing F comp. time        [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
-// Calculate the other F boundary value
+// Evaluate the theta value at each position near the evaluated panel
 void calcBEM::CALC_theta(){
+    // Create a dummy internal node data with regular distribution (from 0 < x,y < 1)
     intElement _test;
     double N = 1000;
     for (int i = 0; i < (int)N; i++){
@@ -301,15 +296,15 @@ void calcBEM::CALC_theta(){
         }
     }
 
+    // Evaluate the theta for each internal node related to point M below
     double xm = 0.5;
     double ym = 0.5;
-
     for (int i = 0; i < _test.x.size(); i++){
         double a = this->calc_a(_test.x[i],_test.y[i],xm,ym,0,1);
         double k = this->calc_k(_test.x[i],_test.y[i],xm,ym,0,1);
         _test.phi.push_back(this->calc_Aij(a,k,0.2));
     }
 
+    // Write the data
     save.save_Test(_test);
-
 }

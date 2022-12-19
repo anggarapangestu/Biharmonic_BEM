@@ -1,10 +1,70 @@
 #include "initialization.hpp"
 
+// =====================================================================================
+// =====================================================================================
+// Generation of boundary panel element
+void initialization::generate_boundary_element(element& elm, std::vector<element>& in_elm){
+    // Procedure: \
+       1. Generate the BASE panel element\
+       2. Generate the INNER panel element
+
+    // Computational time calculation
+    clock_t _time = clock();
+
+    // ======== Procedure 1 ========
+    // *****************************
+    // initialization generate boundary panel starting log
+    printf("\nGenerate the base geometry boundary panel ...\n");
+    
+    // Generate the base geometry panel element
+    if (Par::G_type == 1){
+        printf("<+> Rectangular geometry type\n");
+        this->element_rectangular(elm, -1);
+    }else if (Par::G_type == 2){
+        printf("<+> Circular geometry type\n");
+        this->element_circular(elm, -1);
+    }
+    printf("<+> Element number of BASE panel    :   %8d\n", elm.num);
+
+    // ======== Procedure 2 ========
+    // *****************************
+    // Generate the inner geometry panel element
+    for (int ID = 0; ID < Par::N_Gin; ID++){
+        // initialization generate boundary panel starting log
+        printf("\nGenerate the inner geometry %d boundary panel ...\n", ID+1);
+
+        // Create a temporary panel for INNER panel generation
+        element innerPanel;
+        
+        // Create the panel
+        if (Par::Gin_type[ID] == 1){
+            printf("<+> Rectangular geometry type\n");
+            this->element_rectangular(innerPanel, ID);
+        }else if (Par::Gin_type[ID] == 2){
+            printf("<+> Circular geometry type\n");
+            this->element_circular(innerPanel, ID);
+        }
+        printf("<+> Element number of INNER panel %d :   %8d\n", ID+1, innerPanel.num);
+
+        // Insert the panel into the list
+        in_elm.emplace_back(innerPanel);
+    }
+
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("\n<-> All boundary element generation \n");
+    printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+}
+
+// =====================================================================================
+// =====================================================================================
 // Generation of internal node
 void initialization::generate_internal_node(intElement& intElm, const element& elm, const std::vector<element>& in_elm){
-    // initialization generate internal node starting log
-    printf("\nGenerate the internal node ...\n");
+    // Computational time counter
     clock_t _time = clock();
+
+    // Initialization: generate internal node starting log
+    printf("\nGenerate the internal node ...\n");
 
     // Procedure: \
        1. Generate the regular node distribution \
@@ -20,7 +80,7 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
         printf("<+> Finer near panel internal node\n");
         this->internal_finer_near_panel(intElm, elm, in_elm);
     }
-    printf("<+> Number of element                 : %8d\n", intElm.num);
+    printf("<+> Element number of internal node   : %8d\n", intElm.num);
     
     // Displaying the computational time
     _time = clock() - _time;
@@ -28,57 +88,9 @@ void initialization::generate_internal_node(intElement& intElm, const element& e
     printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }
 
-// ===================================================
-// Generation of boundary panel element
-void initialization::generate_boundary_element(element& elm, std::vector<element>& in_elm){
-    // Procedure: \
-       1. Generate the base geometry panel element\
-       2. Generate the inner domain geometry panel element
-
-    // initialization generate boundary panel starting log
-    printf("\nGenerate the base geometry boundary panel ...\n");
-    clock_t _time = clock();
-    
-    // Generate the base geometry panel element
-    if (Par::G_type == 1){
-        printf("<+> Rectangular geometry type\n");
-        this->element_rectangular(elm, -1);
-    }else if (Par::G_type == 2){
-        printf("<+> Circular geometry type\n");
-        this->element_circular(elm, -1);
-    }
-    printf("<+> Number of element               :   %8d\n", elm.num);
-
-    // Generate the base geometry panel element
-    for (int ID = 0; ID < Par::N_Gin; ID++){
-        // initialization generate boundary panel starting log
-        printf("\nGenerate boundary panel of inner geometry %d ...\n", ID+1);
-
-        // Create the panel for each inner geometry
-        element innerPanel;
-        
-        // Create the panel
-        if (Par::Gin_type[ID] == 1){
-            printf("<+> Rectangular geometry type\n");
-            this->element_rectangular(innerPanel, ID);
-        }else if (Par::Gin_type[ID] == 2){
-            printf("<+> Circular geometry type\n");
-            this->element_circular(innerPanel, ID);
-        }
-        printf("<+> Number of element               :   %8d\n", innerPanel.num);
-
-        // Insert the panel into the list
-        in_elm.emplace_back(innerPanel);
-    }
-
-    // Displaying the computational time
-    _time = clock() - _time;
-	printf("\n<-> All boundary element generation \n");
-    printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
-}
-
-// ===================================================
-// Calculate the boundary condition at each panel
+// =====================================================================================
+// =====================================================================================
+// Calculation of panel boundary value
 void initialization::calculate_boundary_condition(element& elm, std::vector<element>& in_elm){
     // Calculate the boundary condition for \
        1. Base geometry element and \
@@ -88,7 +100,8 @@ void initialization::calculate_boundary_condition(element& elm, std::vector<elem
     // initialization generate boundary panel starting log
     printf("\nCalculating boundary condition for base panel ...\n");
     
-    if (Par::opt_sim_type != 3){
+    // Biharmonic simulation
+    if (Par::opt_sim_type == 1){
         // Resize the boundary value array
         elm.F.resize(elm.num, 0.0e0);
         elm.dFdn.resize(elm.num, 0.0e0);
@@ -98,18 +111,20 @@ void initialization::calculate_boundary_condition(element& elm, std::vector<elem
         elm.p_type.resize(elm.num, true);   // The basic known value (dpdn)
 
         // Generate the base geometry panel element
-        printf("<+> Calculate dFdn value\n");
+        printf("<+> Calculate dFdn for BASE\n");
         this->F_val_calc(elm, -1);
-        printf("<+> Calculate dpdn value\n");
+        printf("<+> Calculate dpdn for BASE\n");
         this->p_val_calc(elm, -1);
-    }else if (Par::opt_sim_type == 3){
+    }
+    // Heat transfer simulation
+    else if (Par::opt_sim_type == 2){
         // Resize the boundary value array Temperature
         elm.T.resize(elm.num, 0.0e0);
         elm.dTdn.resize(elm.num, 0.0e0);
         elm.T_type.resize(elm.num, true);   // The basic known value (dTdn)
 
         // Generate the base geometry panel element
-        printf("<+> Calculate T value\n");
+        printf("<+> Calculate T for BASE\n");
         this->T_val_calc(elm, -1);
     }
 
@@ -119,7 +134,8 @@ void initialization::calculate_boundary_condition(element& elm, std::vector<elem
 
     // Generate the base geometry panel element
     for (int ID = 0; ID < Par::N_Gin; ID++){
-        if (Par::opt_sim_type != 3){
+        // Biharmonic simulation
+        if (Par::opt_sim_type == 1){
             // Resize the boundary value array
             in_elm[ID].F.resize(in_elm[ID].num, 0.0e0);
             in_elm[ID].dFdn.resize(in_elm[ID].num, 0.0e0);
@@ -133,14 +149,16 @@ void initialization::calculate_boundary_condition(element& elm, std::vector<elem
             this->F_val_calc(in_elm[ID], ID);
             printf("<+> Calculate dpdn for inner geometry %d \n", ID+1);
             this->p_val_calc(in_elm[ID], ID);
-        }else if (Par::opt_sim_type == 3){
+        }
+        // Heat transfer simulation
+        else if (Par::opt_sim_type == 2){
             // Resize the boundary value array Temperature
             in_elm[ID].T.resize(in_elm[ID].num, 0.0e0);
             in_elm[ID].dTdn.resize(in_elm[ID].num, 0.0e0);
             in_elm[ID].T_type.resize(in_elm[ID].num, true);   // The basic known value (dTdn)
             
             // Generate the base geometry panel element
-            printf("<+> Calculate T value\n");
+            printf("<+> Calculate T for inner geometry %d \n", ID+1);
             this->T_val_calc(in_elm[ID], ID);
         }
     }

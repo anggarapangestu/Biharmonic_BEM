@@ -20,25 +20,29 @@ void dataSaving::simulation_log(){
     // Simulation parameter summary data
 	printf("\n+---------- Simulation Parameters Data -----------+\n");
     if (Par::opt_sim_type == 1){
-        printf("Simulation type                     : Plane Strain \n");
+        printf("Simulation type                     :   Biharmonic \n");
+        if (Par::opt_biharmonic_type == 1){
+            printf("Biharmonic simulation type          : Plane Strain \n");
+        }else if (Par::opt_biharmonic_type == 2){
+            printf("Biharmonic simulation type          : Plane Stress \n");
+        }
     }else if (Par::opt_sim_type == 2){
-        printf("Simulation type                     : Plane Stress \n");
-    }else if (Par::opt_sim_type == 3){
         printf("Simulation type                     :  Temperature \n");
     }
-    printf("Body option                         :     type %d \n", Par::G_type);
-	printf("Initialization option               :     type %d \n", Par::opt_int_init);
-    printf("BEM calculation type                :     type %d \n", Par::opt_BEM);
-	// printf("Maximum resolution level              :        %d \n", Par::max_level);
-	printf("Base internal node spacing          :   %8.4f m\n", Par::spc);
-    printf("Base panel length                   :   %8.4f m\n", Par::len);
+    printf("Body option                         :       type %d \n", Par::G_type);
+	printf("Internal node distribution option   :       type %d \n", Par::opt_int_init);
+    printf("BEM calculation type                :       type %d \n", Par::opt_BEM);
+	if (Par::flag_cylinder == true){
+        printf("Cylindrical coordinate calculation  :    turned on\n");
+    }
 	printf("+-------------------------------------------------+\n");
 
 	// Additional calculation data
 	printf("\n+---------------- Additional Data ----------------+\n");
-	printf("Number of boundary surface          :   %8d \n", Par::N_Gin + 1);
+	printf("Base internal node spacing          :   %8.4f m\n", Par::spc);
+    printf("Base panel length                   :   %8.4f m\n", Par::len);
+    printf("Number of boundary surface          :   %8d \n", Par::N_Gin + 1);
     printf("Support domain radius factor        :   %8.2f \n", Par::R_s);
-	// printf("Turbulent scaling                     : %12f \n", std::ceil(1.0e0 / Par::Courant));
 	printf("+-------------------------------------------------+\n");
 
     // Cancel the saving procedure if flag is closed
@@ -52,35 +56,39 @@ void dataSaving::simulation_log(){
 	
 	this->save << "+-------------- Material Properties --------------+\n";
 	this->save << std::fixed << std::setprecision(2)
-               << "Elasticity (E)                        : "; save.width(6); save << std::right << Par::E/1.0e9  << " GPa\n"
-               << "Poisson Ratio (nu)                    : "; save.width(6); save << std::right << Par::nu << " [-]\n"
-               << "Lame's constant mu                    : "; save.width(6); save << std::right << Par::mu/1.0e9 << " GPa\n"
-               << "Lame's constant lambda                : "; save.width(6); save << std::right << Par::lambda/1.0e9 << " GPa\n"
+               << "Elasticity (E)                      : "; save.width(8); save << std::right << Par::E/1.0e9  << " GPa\n"
+               << "Poisson Ratio (nu)                  : "; save.width(8); save << std::right << Par::nu << " [-]\n"
+               << "Lame's constant mu                  : "; save.width(8); save << std::right << Par::mu/1.0e9 << " GPa\n"
+               << "Lame's constant lambda              : "; save.width(8); save << std::right << Par::lambda/1.0e9 << " GPa\n"
                << "+-------------------------------------------------+\n\n"
                ;
 
 	this->save << "+----------- Simulation Setting Option -----------+\n";
     if (Par::opt_sim_type == 1){
-        this->save << "Simulation type                       : " << "Plane Strain\n";
+        this->save << "Simulation type                     :   " << "Biharmonic\n";
+        if (Par::opt_biharmonic_type == 1){
+            this->save << "Biharmonic simulation type          : " << "Plane Strain\n";
+        }else if (Par::opt_biharmonic_type == 2){
+            this->save << "Biharmonic simulation type          : " << "Plane Stress\n";
+        }
     }else if (Par::opt_sim_type == 2){
-        this->save << "Simulation type                       : " << "Plane Stress\n";
-    }else if (Par::opt_sim_type == 3){
-        this->save << "Simulation type                       : " << " Temperature\n";
+        this->save << "Simulation type                     :  " << "Temperature\n";
     }
-    this->save << "Body option                           :   " << "type " << Par::G_type << "\n"
-               << "Initialization option                 :   " << "type " << Par::opt_int_init << "\n"
-               << "BEM calculation option                :   " << "type " << Par::opt_BEM << "\n"
-            //    << "Neighbor search option                :   " << "type " << Par::opt_neighbor << "\n"
+    this->save << "Body option                         :       " << "type " << Par::G_type << "\n"
+               << "Internal node distribution option   :       " << "type " << Par::opt_int_init << "\n"
+               << "BEM calculation option              :       " << "type " << Par::opt_BEM << "\n"
                ;
-	this->save << std::fixed << std::setprecision(4)
-               << "Base internal node spacing            :   "; save.width(6); save << std::right << Par::spc << " m\n"
-               << "Base panel length                     :   "; save.width(6); save << std::right << Par::len << " m\n"
-               << "+-------------------------------------------------+\n\n"
-               ;
+    if (Par::flag_cylinder == true){
+        this->save << "Cylindrical coordinate calculation  :    " << "turned on\n";
+    }
+    this->save << "+-------------------------------------------------+\n\n";
 
-	this->save << "+---------------- Additional Data ----------------+\n"
-               << "Number of boundary surface            :   "; save.width(6); save << std::right << Par::N_Gin + 1 << "\n"
-               << "Support domain radius factor          :   "; save.width(6); save << std::right << Par::R_s << "\n"
+	this->save << std::fixed << std::setprecision(4)
+               << "+---------------- Additional Data ----------------+\n"
+               << "Base internal node spacing          :   "; save.width(8); save << std::right << Par::spc << " m\n"
+               << "Base panel length                   :   "; save.width(8); save << std::right << Par::len << " m\n"
+               << "Number of boundary surface          :   "; save.width(8); save << std::right << Par::N_Gin + 1 << "\n"
+               << "Support domain radius factor        :   "; save.width(8); save << std::right << Par::R_s << "\n"
                << "+-------------------------------------------------+\n\n"
                ;
 	
@@ -90,6 +98,8 @@ void dataSaving::simulation_log(){
 	this->save.close();
 }
 
+// =====================================================================================
+// =====================================================================================
 // Method to write the internal data properties
 void dataSaving::write_internal_data(const intElement& intElm){
 	// Cancel the saving procedure if flag is closed
@@ -118,7 +128,9 @@ void dataSaving::write_internal_data(const intElement& intElm){
                << "," << "epsilon_xx" 
                << "," << "epsilon_yy"
                << "," << "epsilon_xy";
-    if (Par::opt_prop_cal == 1){
+            //    << "," << "u"
+            //    << "," << "v";
+    if (Par::flag_cylinder == true){
     this->save << "," << "sigma_rr"
                << "," << "sigma_tt" 
                << "," << "tau_rt" 
@@ -126,8 +138,6 @@ void dataSaving::write_internal_data(const intElement& intElm){
                << "," << "epsilon_tt"
                << "," << "epsilon_rt";
     }
-            //    << "," << "u"
-            //    << "," << "v"
     this->save << "\n";
 
 	// write each node data
@@ -144,7 +154,9 @@ void dataSaving::write_internal_data(const intElement& intElm){
                    << "," << intElm.e_xx[i]
                    << "," << intElm.e_yy[i]
                    << "," << intElm.e_xy[i];
-    if (Par::opt_prop_cal == 1){
+                //    << "," << intElm.u[i]
+                //    << "," << intElm.v[i];
+    if (Par::flag_cylinder == true){
     this->save << "," << intElm.s_rr[i]
                << "," << intElm.s_tt[i]
                << "," << intElm.t_rt[i]
@@ -152,8 +164,6 @@ void dataSaving::write_internal_data(const intElement& intElm){
                << "," << intElm.e_tt[i]
                << "," << intElm.e_rt[i];
     }
-                //    << "," << intElm.u[i]
-                //    << "," << intElm.v[i]
     this->save << "\n";
 	}
     
@@ -231,7 +241,7 @@ void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& 
                << "," << "dphi_dn" 
                << "\n";
 
-	// write each node data
+	// write each element data
 
     // Base geometry
     for (int i = 0; i < elm.num; i++){
@@ -332,6 +342,8 @@ void dataSaving::write_BEM_data_temp(const element& elm, const std::vector<eleme
     printf("<+> Done saving boundary element data\n");
 }
 
+// =====================================================================================
+// =====================================================================================
 // Write matrix data
 void dataSaving::write_Matrix(const Eigen::MatrixXd& MAT, std::string name){
     // saving starting log
@@ -378,8 +390,9 @@ void dataSaving::write_Matrix(const Eigen::VectorXd& VEC, std::string name){
 	this->save.close();
 }
 
-
-// Write Testing
+// =====================================================================================
+// =====================================================================================
+// Saving method for testing
 void dataSaving::save_Test(const intElement & elm){
     // saving starting log
     printf("<+> Saving testing data ... \n");

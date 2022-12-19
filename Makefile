@@ -78,32 +78,29 @@ LOG			= log.cpp\
 OBJS_LOG	= $(LOG:%.cpp=%.o)            # Change from SRCS the ".cpp" into ".o"
 
 # Target to compile and link all log
-$(PROGRAM_LOG):	OBPR $(OBJS_LOG)
+$(PROGRAM_LOG):	OBPR_LOG $(OBJS_LOG)
 			@echo "\n[DONE] Object file is completely built"
 			@echo "\nStart linking the object ..."
 			$(COMPILER) $(OBJS_LOG) -o $(PROGRAM_LOG)
 			@echo "\n[DONE] Program compiled and linked successfully"
-
-# Target to compile and link all log
-compile_log:$(PROGRAM_LOG)
 
 # Target for displaying initial object building prompt
 OBPR_LOG:
 			@echo "Start building the log object file ..."
 
 # Target to run the log message
-run_log:
+run_log: $(PROGRAM_LOG)
 			@./$(PROGRAM_LOG)
 
-# Clean log
+# ==========================================
+# ================== DATA ==================
+# ==========================================
+# Target to delete the log object program files
 clean_log:
 			@rm -f $(OBJS_LOG)
 			@rm -f $(PROGRAM_LOG)
 			@echo "+-------------- LOG CLEANED -------------+"
 
-# ==========================================
-# ================== DATA ==================
-# ==========================================
 # Target to delete the object and program files
 clean:
 			@while [ -z "$$CONTINUE" ]; do \

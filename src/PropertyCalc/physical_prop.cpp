@@ -1,22 +1,30 @@
 #include "physical_prop.hpp"
 #include <fstream>
 
+// =====================================================================================
+// =====================================================================================
+// The property calculation manager
 void propertyCalc::calculate_property(intElement& intNode){
-    // Calculate the stresses
+    // ====================== STRESS CALCULATION ======================
+    // ****************************************************************
     // Initialization stress calculation log
     printf("\nStress calculation ...\n");
     clock_t _time = clock();
+
+    // Stress calculation
     this->calculate_stress(intNode);
     
     // Out plane stress calculation (z-direction)
-    if (Par::opt_sim_type == 1){        // Plane strain
+    // Plane strain
+    if (Par::opt_biharmonic_type == 1){
         // Calculate the stress at z direction
         intNode.s_zz.resize(intNode.num,0.0e0);
         for (int i = 0; i < intNode.num; i++){
             intNode.s_zz[i] = Par::nu * (intNode.s_xx[i] + intNode.s_yy[i]);
         }
     }
-    else if (Par::opt_sim_type == 2){   // Plane stress
+    // Plane stress
+    else if (Par::opt_biharmonic_type == 2){
         // No stresses at z direction
     }
 
@@ -24,20 +32,28 @@ void propertyCalc::calculate_property(intElement& intNode){
     _time = clock() - _time;
 	printf("<-> Stress calculation comp. time      [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
     
-    // Calculate the strains
+
+    // ====================== STRAIN CALCULATION ======================
+    // ****************************************************************
     // Initialization strain calculation log
     printf("\nStrain calculation ...\n");
     _time = clock();
+
+    // Strain calculation
     this->calculate_strain(intNode);
     
     // Displaying the computational time
     _time = clock() - _time;
 	printf("<-> Strain calculation comp. time      [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 
-    // Calculate the displacements
+
+    // =================== DISPLACEMENT CALCULATION ===================
+    // ****************************************************************
     // Initialization strain calculation log
     printf("\nDisplacement calculation ...\n");
-    _time = clock() - _time;
+    _time = clock();
+    
+    // Displacement calculation
     this->calculate_disp(intNode);
     
     // Displaying the computational time
@@ -45,11 +61,15 @@ void propertyCalc::calculate_property(intElement& intNode){
 	printf("<-> Displacement calculation\n");
     printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 
+    // ============ COORDINATE TRANSFORMATION CALCULATION =============
+    // ****************************************************************
     // Calculate the properties transformation
-    // Initialization strain calculation log
-    if (Par::opt_prop_cal == 1){
+    if (Par::flag_cylinder == true){
+        // Initialization of transformation calculation log
         printf("\nTransformation calculation ...\n");
-        _time = clock() - _time;
+        _time = clock();
+        
+        // Coordinate transformation calculation
         this->coor_transform(intNode);
         
         // Displaying the computational time
@@ -59,26 +79,36 @@ void propertyCalc::calculate_property(intElement& intNode){
     }
 }
 
+// For TESTING !!!
+// The analytical soltuion of phi biaxial
 void propertyCalc::phi_analytic_biaxial(intElement& intNode){
-    // phi = Ax^2 + Bxy + Cy^2
-    // A = s_yy/2
-    // B = -s_xy
-    // C = s_xx/2
+    /* The biaxial analytical solution for phi
+        phi(x,y) = Ax^2 + Bxy + Cy^2
+        With:
+            A = s_yy/2
+            B = -s_xy
+            C = s_xx/2
+    */
+    
+    // Internal variables definition
     double A, B, C;
     A = Par::trac_t_y / 2.0;
     B = 0.0;
     C = Par::trac_r_x / 2.0;
+    
+    // The phi analytical solution calculation and assignment
     intNode.phi_an.resize(intNode.num,0.0e0);
     for (size_t i = 0; i < intNode.num; i++){
-        intNode.phi_an[i] = A * std::pow(intNode.x[i],2) 
+        intNode.phi_an[i] =   A * std::pow(intNode.x[i],2) 
                             + B * intNode.x[i]*intNode.y[i]
                             + C * std::pow(intNode.y[i],2);
     }
 
 }
+
 // ======================================================================
 // ======================================================================
-// Calculation of stress by using LSMPS
+// Calculation of stress from airy stress by using LSMPS
 void propertyCalc::calculate_stress(intElement& intNode){
     // Resize the stress properties
     intNode.s_xx.resize(intNode.num, 0.0e0);
@@ -88,7 +118,7 @@ void propertyCalc::calculate_stress(intElement& intNode){
     // Evaluate the neigbor
 	std::vector<std::vector<int>> ngh_ID = this->neighEval.link_list(intNode.num, intNode.x, intNode.y, Par::R_s);
 
-    // WRITE FILE of Neighbor
+    // WRITE the neighbor data
     if(Par::flag_save_Neigh == true){
         std::ofstream save;
         save.open("output/neighbor_dat.csv");
@@ -125,6 +155,7 @@ void propertyCalc::calculate_stress(intElement& intNode){
     }
 }
 
+// Calculation of srain using plane strain/stress relation
 void propertyCalc::calculate_strain(intElement& intNode){
     // Resize the strain properties
     intNode.e_xx.resize(intNode.num, 0.0e0);
@@ -132,9 +163,9 @@ void propertyCalc::calculate_strain(intElement& intNode){
     intNode.e_xy.resize(intNode.num, 0.0e0);
     
     // Strain are calculated base on the simulation type
-
-    // Plane strain
-    if (Par::opt_sim_type == 1){
+    // *************************************************
+    // PLANE STRAIN
+    if (Par::opt_biharmonic_type== 1){
         double A = Par::lambda + 2 * Par::mu;
         double B = Par::lambda;
         double D = 1 / (A*A - B*B);
@@ -146,8 +177,8 @@ void propertyCalc::calculate_strain(intElement& intNode){
         }
     }
     
-    // Plane stress
-    else if (Par::opt_sim_type == 2){
+    // PLANE STRESS
+    else if (Par::opt_biharmonic_type == 2){
         // Strain at z direction
         intNode.e_zz.resize(intNode.num, 0.0e0);
 
@@ -161,12 +192,18 @@ void propertyCalc::calculate_strain(intElement& intNode){
     }
 }
 
+// Calculation of displacement
 void propertyCalc::calculate_disp(intElement& intNode)
 {
-    // In development ...
+    // Still in development ...
+    // See you soon :)
 }
 
+// =====================================================================================
+// =====================================================================================
+// Transformation stress and strain tensor into cylindrical coordinate
 void propertyCalc::coor_transform(intElement& intNode){
+    // Resize each vector at new coordinate
     intNode.s_rr.resize(intNode.num,0.0e0);
     intNode.s_tt.resize(intNode.num,0.0e0);
     intNode.t_rt.resize(intNode.num,0.0e0);
@@ -178,6 +215,7 @@ void propertyCalc::coor_transform(intElement& intNode){
     double s11,s12,s22,e11,e12,e22;
     double theta, _sin2t, _cos2t;
     for (int i = 0; i < intNode.num; i++){
+        // Assign the value at each evaluation
         theta = std::atan2(intNode.y[i],intNode.x[i]);
         _sin2t = std::sin(2 * theta);
         _cos2t = std::cos(2 * theta);
@@ -188,7 +226,7 @@ void propertyCalc::coor_transform(intElement& intNode){
         e12 = intNode.e_xy[i];
         e22 = intNode.e_yy[i];
 
-        // Calculation of transformation
+        // Calculation of coordinate transformation
         intNode.s_rr[i] = (s11 + s22)/2.0 + ((s11 - s22)/2.0)*_cos2t + s12*_sin2t;
         intNode.t_rt[i] = - ((s11 - s22)/2.0)*_sin2t + s12*_cos2t;
         intNode.s_tt[i] = (s11 + s22)/2.0 - ((s11 - s22)/2.0)*_cos2t - s12*_sin2t;
@@ -197,3 +235,4 @@ void propertyCalc::coor_transform(intElement& intNode){
         intNode.e_tt[i] = (e11 + e22)/2.0 - ((e11 - e22)/2.0)*_cos2t - e12*_sin2t;;
     }
 }
+

@@ -28,16 +28,16 @@ public:
     std::vector<double> Tx;     // Traction in x direction
     std::vector<double> Ty;     // Traction in y direction
     
-    // Boundary condition Dirichet and Neumann
-    std::vector<double> F;      // Airy stress laplacian : Del^2(phi)
+    // Boundary condition Dirichet and Neumann Biharmonic
+    std::vector<double> F;      // Airy stress laplacian : F = Del^2(phi)
     std::vector<double> p;      // Airy stress function  : phi
     std::vector<double> dFdn;   // Airy stress laplacian normal plane derivative
     std::vector<double> dpdn;   // Airy stress function normal plane derivative
     std::vector<bool> F_type;   // The type of given boundary condition for F   (true: neumann, false: dirichlet)
     std::vector<bool> p_type;   // The type of given boundary condition for phi (true: neumann, false: dirichlet)
 
-    // Boundary condition Dirichet and Neumann
-    std::vector<double> T;      // Temperature laplacian : Del^2(T)
+    // Boundary condition Dirichet and Neumann Temperature
+    std::vector<double> T;      // Temperature property T
     std::vector<double> dTdn;   // Temperature normal plane derivative
     std::vector<bool> T_type;   // The type of given boundary condition for T   (true: neumann, false: dirichlet)
 };
@@ -58,10 +58,11 @@ public:
     std::vector<double> s;      // The element spacing size
     std::vector<double> R;      // Distance to nearest panel
 
-    // Boundary condition Dirichet and Neumann
+    // The BEM basic function
     std::vector<double> phi;      // Airy stress function (phi)
-    std::vector<double> phi_an;   // Airy stress function of analytic solution (phi)
+    std::vector<double> phi_an;   // Airy stress function analytic solution (phi)
     std::vector<double> T;        // Temperature (T)
+    std::vector<double> T_an;     // Temperature analytic solution (T)
     
     // ============= STRESS =============
     // Stress properties (cartesian)
@@ -96,13 +97,9 @@ public:
 #endif
 
 /* DATA STORAGE
-    - Geometry
-        > Boundary node position (x,y)
-        > Boundary condition <?> (u,v,Tx,Ty)
-        > The index is arrange in sequence CCW direction
     - Boundary element
         > Midpoint position (x,y)
-        > Boundary condtion (p, dpdn, F, dFdn)
+        > Boundary condtion (p, dpdn, F, dFdn, T, dTdn)
         > Panel length (L)
         > Panel normal unit vector (nx, ny)
         > The index is arrange in sequence CCW direction

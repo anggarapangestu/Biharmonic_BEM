@@ -23,32 +23,51 @@
 #endif
 
 int main(){
-    /* The CODE PROCEDURE
-        INITIALIZATION
-        (1) Element Generation (Internal and Boundary)
-        (2) Boundary Value Calculation (traction & displacement)
-        (3) Matrix Built Up
+/* The Flow in this Biharmonic Program Code
+    INITIALIZATION
+    (1) Element Generation :
+        * Boundary element for base geometry boundary (BASE)
+        * Boundary element for internal boundary (INNER)
+        * Nodes at internal domain (INTERNAL)
+    (2) Boundary Value Calculation 
+        I.  Biharmonic (sim type 1)
+            * Traction
+            * Displacement (still not developed)
+        II. Temperature (sim type 2)
+            * Temperature
+    (3) Boundary element initialization for BEM calculation
+        -> Combine each boundary element (BASE and INNER)
 
-        SOLVER
+    SOLVER
+    I.  Biharmonic (sim type 1)
         (1) Solving Laplace of F
         (2) Solving Poison of phi
+    II. Temperature (sim type 2)
+        (1) Solving Laplace of T
 
-        POST PROCESSING
-        (1) Calculate the phi inside domain
-        (2) Calculate the properties (sigma_x, sigma_y, tau_xy, u, v, ...) inside domain
-        (3) Write Data
-    */
+    POST PROCESSING
+    (1) Calculate the domain properties
+        I.  Biharmonic (sim type 1)
+            -> Calculate the phi inside domain
+            -> Calculate the properties (sigma_x, sigma_y, tau_xy, u, v, ...) inside domain
+        II. Temperature (sim type 2)
+            -> Calculate the T inside domain
+    (2) Write Data
+*/
+
+    // The computational time counter
     clock_t _time = clock();
+    
     // ======================================
     // ====== INTERNAL VARIABLE REGION ======
     // ======================================
 
-    // Initialize the storage data for boundary and internal element
-    element PanelElement;
-    std::vector<element> InnerElement;
-    intElement InternalNode;
+    // Initialize the storage data for boundary element and internal node
+    element PanelElement;               // BASE element
+    std::vector<element> InnerElement;  // INNER element
+    intElement InternalNode;            // INTERNAL node
     
-    // Initialize the method
+    // Initialize the function method
     initialization init;
     calcBEM BEMstep;
     propertyCalc prop_step;
@@ -83,39 +102,45 @@ int main(){
     std::cout << "#=================================================#\n";
     std::cout << "+---------------- BEM SOLVER LOG -----------------+\n";
     std::cout << "#=================================================#\n";
-    
-    // Testing
-    // BEMstep.CALC_theta();
 
     // Initialize the BEM paramter
-    BEMstep.Define_BEM(PanelElement, InnerElement);    
+    BEMstep.Define_BEM(PanelElement, InnerElement);
+    
+    // // Testing
+    // BEMstep.CALC_theta();
     // BEMstep.TEST_BEM(PanelElement, InnerElement);
 
-    if (Par::opt_sim_type != 3){
-        // Calculate the other boundary element value
+    // Biharmonic simulation solver
+    if (Par::opt_sim_type == 1){
+        // Calculate the other boundary element value by BEM
         BEMstep.solve_F(PanelElement, InnerElement);
         BEMstep.solve_phi(PanelElement, InnerElement);
 
         // Calculate the phi value at the internal domain node
         BEMstep.calculate_internal_phi(InternalNode, PanelElement, InnerElement);
+        
+        // Additional of phi analytical solution
         prop_step.phi_analytic_biaxial(InternalNode);
     }
-    else if (Par::opt_sim_type == 3){
-        // Calculate the Temperature type
+    // Heat transfer simulation solver
+    else if (Par::opt_sim_type == 2){
+        // Calculate the other boundary element value by BEM
         BEMstep.solve_T(PanelElement, InnerElement);
+        
+        // Calculate the T value at the internal domain node
         BEMstep.calculate_internal_T(InternalNode, PanelElement, InnerElement);
     }
 
     // =======================================
     // ======= CALCULATING PROPERTIES ========
     // =======================================
-    if (Par::opt_sim_type != 3){
+    if (Par::opt_sim_type == 1){
         // BEM calculation HEADER
         std::cout << std::endl;
         std::cout << "#=================================================#\n";
         std::cout << "+------------ PROPERTIES CALCULATION -------------+\n";
         std::cout << "#=================================================#\n";
-        // Calculate all properties at the domain
+        // Calculate all properties for biharmonic at the domain
         prop_step.calculate_property(InternalNode);
     }
     
@@ -127,12 +152,15 @@ int main(){
     std::cout << std::endl;
     std::cout << "+---------------- SAVING DATA LOG ----------------+\n";
     // Write the element data
-    if (Par::opt_sim_type != 3){
-        // Saving biharmonic data
+    
+    // Saving biharmonic data
+    if (Par::opt_sim_type == 1){
         save.write_internal_data(InternalNode);
         save.write_BEM_data(PanelElement, InnerElement);
-    }else if (Par::opt_sim_type == 3){
-        // Saving temperature laplace data
+    }
+    
+    // Saving temperature data
+    else if (Par::opt_sim_type == 2){
         save.write_internal_data_temp(InternalNode);
         save.write_BEM_data_temp(PanelElement, InnerElement);
     }
@@ -192,7 +220,7 @@ int main(){
      - Saving (S)
 */
 
-/*  >>>>> WRITING <<<<<
+/*  >>>>> WRITING SYSTEM <<<<<
     SINGLE WORD TYPE
     * type 0: Capitalize all        e.g. GROUP   : Const variable
     * type 1: Normal case           e.g. group   : general variable

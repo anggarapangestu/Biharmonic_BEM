@@ -16,14 +16,27 @@
 class propertyCalc
 {
 private:
-    neighbor neighEval;
-    LSMPSa lsmpsa_phi;
+    // The private method of property calculation
+    // ******************************************
+    // The internal object variable
+    neighbor neighEval; // Method to calculate neighbor
+    LSMPSa lsmpsa_phi;  // Method to calculate LSMPS A
+    
+    // The property calculation
     void calculate_stress(intElement& intNode);
     void calculate_strain(intElement& intNode);
     void calculate_disp(intElement& intNode);
+    
+    // The property calculation by transformation to cylindrical
     void coor_transform(intElement& intNode);
 public:
+    // The public method of property calculation
+    // *****************************************
+    // The property calculation manager
     void calculate_property(intElement& intNode);
+
+    // For TESTING !!!
+    // The analytical soltuion of phi biaxial
     void phi_analytic_biaxial(intElement& intNode);
 };
 
