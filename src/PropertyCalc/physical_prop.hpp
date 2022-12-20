@@ -38,6 +38,10 @@ public:
     // For TESTING !!!
     // The analytical soltuion of phi biaxial
     void phi_analytic_biaxial(intElement& intNode);
+
+    // The analytical solution of polynomial laplace and biharmonic
+    void lap_analytic(intElement& intNode);
+    void bhm_analytic(intElement& intNode);
 };
 
 #endif

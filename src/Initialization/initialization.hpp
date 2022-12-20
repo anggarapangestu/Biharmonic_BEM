@@ -21,6 +21,11 @@ private:
     void F_val_calc(element& elm, int ID);
     void p_val_calc(element& elm, int ID);
     void T_val_calc(element& elm, int ID);
+    
+    // Given function boundary condition
+    void F_bihar_val_calc(element& elm, int ID);
+    void p_bihar_val_calc(element& elm, int ID);
+    void p_lap_val_calc(element& elm, int ID);
 
 public:
     // The class of public method belong here

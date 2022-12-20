@@ -216,6 +216,47 @@ void dataSaving::write_internal_data_temp(const intElement& intElm){
     printf("<+> Done saving internal node data\n");
 }
 
+// Method to write the internal data properties of prescribed function
+void dataSaving::write_internal_data_fun(const intElement& intElm){
+    // Cancel the saving procedure if flag is closed
+    if (Par::flag_save_Int_Node == false){return;}
+
+    // saving starting log
+    printf("\nSaving the internal node data ...\n");
+    
+    // write file name
+	std::string name;
+		
+	// open the write file
+	name.append("output/internal_node_data.csv");
+	this->save.open(name.c_str());
+
+    // write the data header
+	this->save << "" << "x" 
+               << "," << "y"
+               << "," << "R"
+               << "," << "s"
+               << "," << "phi"
+               << "," << "phi_an"
+               << "\n";
+
+	// write each node data
+    for (int i = 0; i < intElm.num; i++){
+        this->save << "" << intElm.x[i]
+                   << "," << intElm.y[i]
+                   << "," << intElm.R[i]
+                   << "," << intElm.s[i]
+                   << "," << intElm.phi[i]
+                   << "," << intElm.phi_an[i]
+                   << "\n";
+	}
+    
+    // close the write file
+	this->save.close();
+
+    printf("<+> Done saving internal node data\n");
+}
+
 // Method to write the boundary element data
 void dataSaving::write_BEM_data(const element& elm, const std::vector<element>& in_elm){
     // Cancel the saving procedure if flag is closed

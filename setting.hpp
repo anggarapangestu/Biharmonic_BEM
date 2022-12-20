@@ -13,7 +13,9 @@ namespace Par{
     
     // Simulation type
     // 1:= Biharmonic solver,
-    // 2:= Temperature solver
+    // 2:= Temperature solver,
+    // 3:= Biharmonic solver,
+    // 4:= Laplace solver
     const extern int opt_sim_type;
     
     // The type of biharmonic solution
@@ -30,7 +32,12 @@ namespace Par{
     // 1:= Type 1 calculation -> Calculate A, B, C, and D,
     // 2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn (NOT WORK, may be deleted)
     const extern int opt_BEM;
-                                    
+
+// #==================================================#
+// +------------ [BASIC SOLVER PARAMETER] ------------+
+// #==================================================#
+    // DEFINED IN THE BOUNDARY CONDITION
+
 // #==================================================#
 // +--------------- [PROGRAM PARAMETER] --------------+
 // #==================================================#
@@ -78,9 +85,12 @@ namespace Par{
     // ---------------------------------------
     // Parameter of the BASE Geometry Boundary
     // ---------------------------------------
-    const extern int G_type;        // Type of geometry:
-                    // 1 := Rectangular
-                    // 2 := Circular/Oval
+    
+    // Type of geometry:
+    // 1 := Rectangular
+    // 2 := Circular/Oval
+    const extern int G_type;        
+                    
     const extern double dom_Lx;     // Base geometry x length
     const extern double dom_Ly;     // Base geometry y length
     

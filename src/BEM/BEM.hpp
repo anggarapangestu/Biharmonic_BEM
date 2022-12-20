@@ -20,6 +20,7 @@ private:
 
     // Internal object variable
     dataSaving save;            // For saving the BEM matrix
+    element BEM_elm;            // The element for BEM evaluation
 
     // Internal variable
     int N;                      // The matrix row and col length
@@ -45,6 +46,18 @@ private:
 
     // Matrix operator
     void swap_col(Eigen::MatrixXd& A, Eigen::MatrixXd& B, int col);
+
+    // BEM type calculation
+    void define_element(const element& elm, const std::vector<element>& in_elm);
+    void retrieve_element(element& elm, std::vector<element>& in_elm);
+
+    // Calculation of BEM: solving the unknown boundary value
+    void solve_biharmonic();
+    void solve_laplace();
+    
+    // Calculation of BEM: solving the internal node value
+    void bhm_internal_calc(intElement& intElm);
+    void lap_internal_calc(intElement& intElm);
     
 public:
     // The class public method belong here
@@ -53,6 +66,9 @@ public:
     // The BEM class internal variable initialization
     void Define_BEM(const element& elm, const std::vector<element>& in_elm);
     
+    // The main BEM calculation
+    void calc_BEM(intElement& intElm, element& elm, std::vector<element>& in_elm);
+
     // Biharmonic Solver
     void solve_F(element& elm, std::vector<element>& in_elm);
     void solve_phi(element& elm, std::vector<element>& in_elm);

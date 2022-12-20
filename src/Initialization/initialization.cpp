@@ -127,6 +127,33 @@ void initialization::calculate_boundary_condition(element& elm, std::vector<elem
         printf("<+> Calculate T for BASE\n");
         this->T_val_calc(elm, -1);
     }
+    // Biharmonic function solver
+    else if (Par::opt_sim_type == 3){
+        // Resize the boundary value array
+        elm.F.resize(elm.num, 0.0e0);
+        elm.dFdn.resize(elm.num, 0.0e0);
+        elm.p.resize(elm.num, 0.0e0);
+        elm.dpdn.resize(elm.num, 0.0e0);
+        elm.F_type.resize(elm.num, true);   // The basic known value (dFdn)
+        elm.p_type.resize(elm.num, true);   // The basic known value (dpdn)
+
+        // Generate the base geometry panel element
+        printf("<+> Calculate dFdn for BASE\n");
+        this->F_bihar_val_calc(elm, -1);
+        printf("<+> Calculate dpdn for BASE\n");
+        this->p_bihar_val_calc(elm, -1);
+    }
+    // Laplace function solver
+    else if (Par::opt_sim_type == 4){
+        // Resize the boundary value array
+        elm.p.resize(elm.num, 0.0e0);
+        elm.dpdn.resize(elm.num, 0.0e0);
+        elm.p_type.resize(elm.num, true);   // The basic known value (dpdn)
+
+        // Generate the base geometry panel element
+        printf("<+> Calculate p or dpdn for BASE\n");
+        this->p_lap_val_calc(elm, -1);
+    }
 
     // ======== INNER GEOMETRY ========
     // initialization generate boundary panel starting log
@@ -160,6 +187,33 @@ void initialization::calculate_boundary_condition(element& elm, std::vector<elem
             // Generate the base geometry panel element
             printf("<+> Calculate T for inner geometry %d \n", ID+1);
             this->T_val_calc(in_elm[ID], ID);
+        }
+        // Biharmonic function solver
+        else if (Par::opt_sim_type == 3){
+            // Resize the boundary value array
+            in_elm[ID].F.resize(in_elm[ID].num, 0.0e0);
+            in_elm[ID].dFdn.resize(in_elm[ID].num, 0.0e0);
+            in_elm[ID].p.resize(in_elm[ID].num, 0.0e0);
+            in_elm[ID].dpdn.resize(in_elm[ID].num, 0.0e0);
+            in_elm[ID].F_type.resize(in_elm[ID].num, true);   // The basic known value (dFdn)
+            in_elm[ID].p_type.resize(in_elm[ID].num, true);   // The basic known value (dpdn)
+
+            // Generate the base geometry panel element
+            printf("<+> Calculate dFdn for inner geometry %d \n", ID+1);
+            this->F_bihar_val_calc(in_elm[ID], ID);
+            printf("<+> Calculate dpdn for inner geometry %d \n", ID+1);
+            this->p_bihar_val_calc(in_elm[ID], ID);
+        }
+        // Laplace function solver
+        else if (Par::opt_sim_type == 4){
+            // Resize the boundary value array
+            in_elm[ID].p.resize(in_elm[ID].num, 0.0e0);
+            in_elm[ID].dpdn.resize(in_elm[ID].num, 0.0e0);
+            in_elm[ID].p_type.resize(in_elm[ID].num, true);   // The basic known value (dpdn)
+
+            // Generate the base geometry panel element
+            printf("<+> Calculate p or dpdn for inner geometry %d \n", ID+1);
+            this->p_lap_val_calc(in_elm[ID], ID);
         }
     }
 }

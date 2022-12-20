@@ -145,8 +145,11 @@ void initialization::T_val_calc(element& elm, int ID){
     int T_calc_type;
     if (base == true){
         // T_calc_type = 1;
-        // T_calc_type = 2;
-        T_calc_type = 3;
+        if (Par::G_type == 1){
+            T_calc_type = 3;
+        }else if (Par::G_type == 2){
+            T_calc_type = 2;
+        }
     }else{
         T_calc_type = 2;
     }
@@ -210,4 +213,115 @@ void initialization::T_val_calc(element& elm, int ID){
         }
     }
 
+}
+
+// ================================================================================
+// ================================================================================
+// The calculation of F and p boundary value for biharmonic: phi(x,y) = x^4 - 12(xy)^2 + y^4
+void initialization::F_bihar_val_calc(element& elm, int ID){
+    // Define the boundary value of F or dFdn assignment type
+    // F(x,y) = - 12(x^2 + y^2)
+    // Del F(x,y) = - 24x i - 24y j
+    int BCtype = 1; // 1:= Neumann, 2:= Dirichlet
+    if (ID >= 0){
+        BCtype = 2;
+    }
+    double x, y;
+    double nx, ny, Fx, Fy;
+    
+    // All Neumann value given
+    if (BCtype == 1){
+        for (int i = 0; i < elm.num; i++){
+            x = elm.xm[i];
+            y = elm.ym[i];
+            nx = elm.xn[i];
+            ny = elm.yn[i];
+            Fx = -24.0 * x;
+            Fy = -24.0 * y;
+            elm.dFdn[i] = Fx*nx + Fy*ny;
+        }
+    }
+    
+    // All Dirichlet value given
+    else if (BCtype == 2){
+        for (int i = 0; i < elm.num; i++){
+            x = elm.xm[i];
+            y = elm.ym[i];
+            elm.F[i] = -12.0 * (x*x + y*y);
+            elm.F_type[i] = false;
+        }
+    }
+}
+
+void initialization::p_bihar_val_calc(element& elm, int ID){
+    // Define the boundary value of p or dpdn assignment type
+    // phi(x,y) = x^4 - 12(xy)^2 + y^4
+    // Del phi(x,y) = (4x^3 - 24xy^2)i + (-24x^2y + 4y^3)j
+    int BCtype = 2; // 1:= Neumann, 2:= Dirichlet
+    if (ID >= 0){
+        BCtype = 1;
+    }
+    double x, y;
+    double nx, ny, px, py;
+    
+    // All Neumann value given
+    if (BCtype == 1){
+        for (int i = 0; i < elm.num; i++){
+            x = elm.xm[i];
+            y = elm.ym[i];
+            nx = elm.xn[i];
+            ny = elm.yn[i];
+            px = (4.0*x*x*x - 24.0*x*y*y);
+            py = (-24.0*x*x*y + 4.0*y*y*y);
+            elm.dpdn[i] = px*nx + py*ny;
+        }
+    }
+    
+    // All Dirichlet value given
+    else if (BCtype == 2){
+        for (int i = 0; i < elm.num; i++){
+            x = elm.xm[i];
+            y = elm.ym[i];
+            elm.p[i] = x*x*x*x - 12.0*x*x*y*y + y*y*y*y;
+            elm.p_type[i] = false;
+        }
+    }
+}
+
+// ================================================================================
+// ================================================================================
+// The calculation of p boundary value for laplace: phi(x,y) = x^2 - 4xy + y^2
+void initialization::p_lap_val_calc(element& elm, int ID){
+    // Define the boundary value of p or dpdn assignment type
+    // phi(x,y) = x^2 - 4xy + y^2
+    // Del phi(x,y) = (2x - 4y)i + (-4x + 2y)j
+    int BCtype = 1; // 1:= Neumann, 2:= Dirichlet
+    if (ID >= 0){
+        BCtype = 2;
+    }
+    double x, y;
+    double nx, ny, px, py;
+    
+    // All Neumann value given
+    if (BCtype == 1){
+        for (int i = 0; i < elm.num; i++){
+            x = elm.xm[i];
+            y = elm.ym[i];
+            nx = elm.xn[i];
+            ny = elm.yn[i];
+            px = (2.0*x - 4.0*y);
+            py = (-4.0*x + 2.0*y);
+            elm.dpdn[i] = px*nx + py*ny;
+        }
+    }
+    
+    // All Dirichlet value given
+    else if (BCtype == 2){
+        for (int i = 0; i < elm.num; i++){
+            x = elm.xm[i];
+            y = elm.ym[i];
+            elm.p[i] = x*x - 4.0*x*y + y*y;
+            elm.p_type[i] = false;
+        }
+    }
 }

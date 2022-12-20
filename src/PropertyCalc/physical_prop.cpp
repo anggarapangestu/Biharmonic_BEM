@@ -236,3 +236,24 @@ void propertyCalc::coor_transform(intElement& intNode){
     }
 }
 
+// The analytical solution of phi
+void propertyCalc::lap_analytic(intElement& intNode){
+    // The laplace equation phi(x,y) = x^2 - 4xy + y^2
+    double _x, _y;
+    intNode.phi_an.resize(intNode.num,0.0e0);
+    for (size_t i = 0; i < intNode.num; i++){
+        _x = intNode.x[i];
+        _y = intNode.y[i];
+        intNode.phi_an[i] = _x*_x - 4*_x*_y + _y*_y;
+    }
+}
+void propertyCalc::bhm_analytic(intElement& intNode){
+    // The biharmonic equation phi(x,y) = x^4 - 12(xy)^2 + y^4
+    double _x, _y;
+    intNode.phi_an.resize(intNode.num,0.0e0);
+    for (size_t i = 0; i < intNode.num; i++){
+        _x = intNode.x[i];
+        _y = intNode.y[i];
+        intNode.phi_an[i] = std::pow(_x, 4) - 12*_x*_x*_y*_y + std::pow(_y, 4);
+    }
+}

@@ -5,9 +5,11 @@ namespace Par{
 // +-------------- [SIMULATION OPTION] ---------------+
 // #==================================================#
     // Simulation type
-    const int opt_sim_type = 1;
+    const int opt_sim_type = 2;
                     // 1:= Biharmonic solver,
-                    // 2:= Temperature solver
+                    // 2:= Temperature solver,
+                    // 3:= Biharmonic solver,
+                    // 4:= Laplace solver,
     
     // The type of biharmonic solution
     const int opt_biharmonic_type = 1;
@@ -23,6 +25,10 @@ namespace Par{
     const int opt_BEM = 1;
                     // 1:= Type 1 calculation -> Calculate A, B, C, and D,
                     // 2:= Type 2 calculation -> Calculate G, dGdn, W, and dWdn (NOT WORK, may be deleted)
+
+// #==================================================#
+// +------------ [BASIC SOLVER PARAMETER] ------------+
+// #==================================================#
 
 // #==================================================#
 // +--------------- [PROGRAM PARAMETER] --------------+
@@ -73,31 +79,31 @@ namespace Par{
     const int G_type = 2;           // Type of geometry:
                     // 1 := Rectangular
                     // 2 := Circular/Oval
-    const double dom_Lx = 3.0e0;    // Base geometry x length
-    const double dom_Ly = 3.0e0;    // Base geometry y length
+    const double dom_Lx = 4.5e0;    // Base geometry x length
+    const double dom_Ly = 2.5e0;    // Base geometry y length
     
     // Boundary Value Parameter for Rectangular geometry\
        -> traction is constant along the surface (in pascal)\
        -> temperature of constant dirichelt or neumann (in Kelvin)
     // Bottom surface
     const double trac_b_x = 0.0e3;   // Bottom traction in x direction
-    const double trac_b_y = -10.0e3;   // Bottom traction in y direction
+    const double trac_b_y = -2.0e3;   // Bottom traction in y direction
     const double temp_b = 300.0e0;   // Bottom Temperature value
     const bool temp_type_b = false;  // BC type
     // Right surface
     const double trac_r_x = 1.0e3;   // Right traction in x direction
     const double trac_r_y = 0.0e3;   // Right traction in y direction
-    const double temp_r = 300.0e0;   // Right temperature value
+    const double temp_r = 1000.0e0;   // Right temperature value
     const bool temp_type_r = false;  // BC type
     // Top surface
     const double trac_t_x = 0.0e3;   // Top traction in x direction
-    const double trac_t_y = 10.0e3;   // Top traction in y direction
+    const double trac_t_y = 2.0e3;   // Top traction in y direction
     const double temp_t = 300.0e0;   // Top temperature value
     const bool temp_type_t = false;  // BC type
     // Left surface
     const double trac_l_x = -1.0e3;  // Left traction in x direction
     const double trac_l_y = 0.0e3;   // Left traction in y direction
-    const double temp_l = 500.0e0;   // Left temperature value
+    const double temp_l = 1000.0e0;   // Left temperature value
     const bool temp_type_l = false;  // BC type
     
     // Boundary Value Parameter for Circular geometry\
@@ -116,8 +122,8 @@ namespace Par{
     const std::vector<int> Gin_type = {2, 2, 2, 2, 2};  // Type of geometry
                             // 1 := Rectangular
                             // 2 := Circular/Oval
-    const std::vector<double> Gin_Xlen = {1.0e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};           // Geometry length in x direction
-    const std::vector<double> Gin_Ylen = {1.0e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};           // Geometry length in y direction
+    const std::vector<double> Gin_Xlen = {1.5e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};           // Geometry length in x direction
+    const std::vector<double> Gin_Ylen = {0.5e0, 1.0e0, 1.0e0, 1.0e0, 1.0e0};           // Geometry length in y direction
     const std::vector<double> Gin_Xcen_pos = {0.0e0, 1.0e0, 1.0e0, -1.0e0, -1.0e0};     // Geometry center x position
     const std::vector<double> Gin_Ycen_pos = {0.0e0, 1.0e0, -1.0e0, -1.0e0, 1.0e0};     // Geometry center y position
     const std::vector<double> Gin_Rot = {0.0e0, 0.0e0, 0.0e0, 0.0e0, 0.0e0};           // Geometry rotation in CCW direction (in degree)
@@ -145,7 +151,7 @@ namespace Par{
 // +------------- [PHYSICAL PROPERTIES] --------------+
 // #==================================================#
     // Solid properties
-    const double E = 69.0e9;                        // Material elasticity in GPa
+    const double E = 69.0e3;                        // Material elasticity in GPa
     const double nu = 0.3;                          // Material poisson ratio
     const double mu = (0.5 * E) / (1 + nu);         // Lame constant (shear modulus)
     const double lambda = (2*mu*nu) / (1 - 2*nu);   // Lame constant

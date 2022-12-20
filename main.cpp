@@ -103,47 +103,42 @@ int main(){
     std::cout << "+---------------- BEM SOLVER LOG -----------------+\n";
     std::cout << "#=================================================#\n";
 
-    // Initialize the BEM paramter
+    // Initialize the BEM parameter
     BEMstep.Define_BEM(PanelElement, InnerElement);
+
+    // Calculating the BEM
+    BEMstep.calc_BEM(InternalNode, PanelElement, InnerElement);
     
     // // Testing
     // BEMstep.CALC_theta();
     // BEMstep.TEST_BEM(PanelElement, InnerElement);
 
-    // Biharmonic simulation solver
+    // =======================================
+    // ======= CALCULATING PROPERTIES ========
+    // =======================================
+    // BEM calculation HEADER
+    std::cout << std::endl;
+    std::cout << "#=================================================#\n";
+    std::cout << "+------------ PROPERTIES CALCULATION -------------+\n";
+    std::cout << "#=================================================#\n";
+    
     if (Par::opt_sim_type == 1){
-        // Calculate the other boundary element value by BEM
-        BEMstep.solve_F(PanelElement, InnerElement);
-        BEMstep.solve_phi(PanelElement, InnerElement);
-
-        // Calculate the phi value at the internal domain node
-        BEMstep.calculate_internal_phi(InternalNode, PanelElement, InnerElement);
+        // Calculate all properties for biharmonic at the domain
+        prop_step.calculate_property(InternalNode);
         
         // Additional of phi analytical solution
         prop_step.phi_analytic_biaxial(InternalNode);
     }
-    // Heat transfer simulation solver
-    else if (Par::opt_sim_type == 2){
-        // Calculate the other boundary element value by BEM
-        BEMstep.solve_T(PanelElement, InnerElement);
-        
-        // Calculate the T value at the internal domain node
-        BEMstep.calculate_internal_T(InternalNode, PanelElement, InnerElement);
+    // Biharmonic equation
+    else if (Par::opt_sim_type == 3){
+        printf("\nBEM calculating biharmonic analytic ...\n");
+        prop_step.bhm_analytic(InternalNode);
     }
-
-    // =======================================
-    // ======= CALCULATING PROPERTIES ========
-    // =======================================
-    if (Par::opt_sim_type == 1){
-        // BEM calculation HEADER
-        std::cout << std::endl;
-        std::cout << "#=================================================#\n";
-        std::cout << "+------------ PROPERTIES CALCULATION -------------+\n";
-        std::cout << "#=================================================#\n";
-        // Calculate all properties for biharmonic at the domain
-        prop_step.calculate_property(InternalNode);
+    // Laplace equation
+    else if (Par::opt_sim_type == 4){
+        printf("\nBEM calculating laplace analytic ...\n");
+        prop_step.lap_analytic(InternalNode);
     }
-    
 
     // ============================
     // ======= SAVING DATA ========
@@ -163,6 +158,12 @@ int main(){
     else if (Par::opt_sim_type == 2){
         save.write_internal_data_temp(InternalNode);
         save.write_BEM_data_temp(PanelElement, InnerElement);
+    }
+    
+    // Saving biharmonic data
+    if (Par::opt_sim_type == 3 || Par::opt_sim_type == 4){
+        save.write_internal_data_fun(InternalNode);
+        save.write_BEM_data(PanelElement, InnerElement);
     }
 
     // Displaying the computational time

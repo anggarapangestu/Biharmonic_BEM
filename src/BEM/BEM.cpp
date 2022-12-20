@@ -1,54 +1,6 @@
 #include "BEM.hpp"
 
 // ================================================================================
-// ============================== BEM INITIALIZATION ==============================
-// ================================================================================
-// Initialize the BEM internal variable
-void calcBEM::Define_BEM(const element& elm, const std::vector<element>& in_elm){
-    // initialization generate internal node starting log
-    printf("\nBEM method initialization ...\n");
-
-    // Initialize the matrix size
-    this->N = 0;
-    N += elm.num;
-    for (int ID = 0; ID < Par::N_Gin; ID++){
-        N += in_elm[ID].num;
-    }
-    
-    // Initialize the ID list
-    this->elmID.resize(N,0);    // The element ID
-    this->elmGIN.resize(N,0);   // The element geometry position (-1:= base, 0:= inner_1, ...)
-    for (int i = 0; i < N; i++){
-        int ID = i;
-        int GIN = -1;
-        if (ID - elm.num < 0){
-            // The base geometry
-            elmID[i] = ID;
-            elmGIN[i] = GIN;
-        }else{
-            // The inner geometry
-            GIN++;
-            ID -= elm.num;
-
-            for (int _id = 0; _id < Par::N_Gin; _id++){
-                if (ID - in_elm[_id].num >= 0){
-                    ID -= in_elm[_id].num;
-                    GIN ++;
-                }else{
-                    break;
-                }
-            }
-
-            elmID[i] = ID;
-            elmGIN[i] = GIN;
-        }
-    }
-    
-    printf("<+> BEM Initialization done\n");
-    printf("<+> Total number of boundary element  : %8d\n", N);
-}
-
-// ================================================================================
 // ============================== BIHARMONIC SOLVER ===============================
 // ================================================================================
 // Calculate the other F boundary value
@@ -684,5 +636,368 @@ void calcBEM::calculate_internal_T(intElement& intElm, const element& elm, const
     // Displaying the computational time
     _time = clock() - _time;
 	printf("<-> Internal node T calculation\n");
+    printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+}
+
+// ================================================================================
+// ============================== BIHARMONIC SOLVER ===============================
+// ================================================================================
+// Calculate the laplace solution
+void calcBEM::solve_laplace(){
+    // initialization generate internal node starting log
+    printf("\nBEM calculating laplace ...\n");
+    clock_t _time = clock();
+
+    // Initialize the matrix
+    Eigen::MatrixXd A_Mat = Eigen::MatrixXd::Zero(this->N, this->N);
+    Eigen::MatrixXd B_Mat = Eigen::MatrixXd::Zero(this->N, this->N);
+    Eigen::VectorXd A_Vec = Eigen::VectorXd::Zero(this->N);       // Left : Value is calculated
+    Eigen::VectorXd B_Vec = Eigen::VectorXd::Zero(this->N);       // Right: Value is given
+
+    // ================= Fill the BEM matrix =================
+    // *******************************************************
+    double _a, _k, L, _Aij, _Bij;
+    for (int i = 0; i < this->N; i++){
+        double xi, yi;  // Current element evaluated
+        double xj, yj;  // Iteration element
+        double xn, yn;  // Normal vector
+
+        // Update the evaluated element
+        xi = this->BEM_elm.xm[i];
+        yi = this->BEM_elm.ym[i];
+
+        // Calculate all element
+        for (int j = 0; j < this->N; j++){
+            // Update the iterated element
+            xj = this->BEM_elm.xm[j];
+            yj = this->BEM_elm.ym[j];
+            xn = this->BEM_elm.xn[j];
+            yn = this->BEM_elm.yn[j];
+            L  = this->BEM_elm.L[j];
+
+            // Calculating the matrix element
+            if (Par::opt_BEM == 1){
+                _a = this->calc_a(xi,yi,xj,yj,xn,yn);
+                _k = this->calc_k(xi,yi,xj,yj,xn,yn);
+                _Aij = this->calc_Aij(_a,_k,L);
+                _Bij = this->calc_Bij(_a,_k,L);
+            }else if (Par::opt_BEM == 2){
+                _Aij = this->calc_dGdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Bij = this->calc_G_dL(xi,yi,xj,yj,xn,yn,L);
+            }    
+            
+            // Matrix assignment
+            if (i == j){
+                A_Mat(i, j) = _Aij - 0.5;
+            }else{
+                A_Mat(i, j) = _Aij;
+            }
+            B_Mat(i, j) = _Bij;
+        }
+    }
+
+    save.write_Matrix(A_Mat, "ALap");
+    save.write_Matrix(B_Mat, "BLap");
+
+    // ================= Fill the BEM vector =================
+    // *******************************************************
+    for (int i = 0; i < this->N; i++){
+        double _dFdn, _F;   // The boundary value
+        bool F_type;        // The neumann type flag
+        
+        _dFdn  = this->BEM_elm.dFdn[i];
+        _F     = this->BEM_elm.F[i];
+        F_type = this->BEM_elm.F_type[i];
+        
+        // Assign the boundary value
+        if (F_type == true){
+            // Neumann boundary condition
+            B_Vec(i) = _dFdn;
+        }
+        if (F_type == false){
+            // Dirichlet boundary condition
+            calcBEM::swap_col(A_Mat, B_Mat, i);
+            B_Vec(i) = _F;
+        }
+    }
+
+    // Solve the matrix by using matrix invertion
+    // ******************************************
+    Eigen::VectorXd bi = B_Mat * B_Vec;
+    A_Vec = A_Mat.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(bi);
+
+    // ================= Update the boundary value on the element ================= 
+    // ****************************************************************************
+    for (int i = 0; i < this->N; i++){    
+        // Neumann boundary condition
+        if (this->BEM_elm.F_type[i] == true){
+            this->BEM_elm.F[i] = A_Vec(i);
+        }
+        // Dirichlet boundary condition
+        else if (this->BEM_elm.F_type[i] == false){
+            this->BEM_elm.dFdn[i] = A_Vec(i);
+        }
+    }
+    
+    // Displaying the computational time
+    _time = clock() - _time;
+    printf("<-> Calculating laplace comp. time     [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+}
+
+// Calculate the biharmonic solution
+void calcBEM::solve_biharmonic(){
+    // initialization generate internal node starting log
+    printf("\nBEM calculating biharmonic ...\n");
+    clock_t _time = clock();
+
+    // Initialize the matrix
+    Eigen::MatrixXd A_Mat = Eigen::MatrixXd::Zero(this->N, this->N);
+    Eigen::MatrixXd B_Mat = Eigen::MatrixXd::Zero(this->N, this->N);
+    Eigen::MatrixXd C_Mat = Eigen::MatrixXd::Zero(this->N, this->N);
+    Eigen::MatrixXd D_Mat = Eigen::MatrixXd::Zero(this->N, this->N);
+    Eigen::VectorXd A_Vec = Eigen::VectorXd::Zero(this->N);       // Left : Value is calculated (typically p)
+    Eigen::VectorXd B_Vec = Eigen::VectorXd::Zero(this->N);       // Right: Value is given      (typically dpdn)
+    Eigen::VectorXd C_Vec = Eigen::VectorXd::Zero(this->N);       // Right: Value is given (F)
+    Eigen::VectorXd D_Vec = Eigen::VectorXd::Zero(this->N);       // Right: Value is given (dFdn)
+
+    // ================= Fill the BEM matrix =================
+    // *******************************************************
+    for (int i = 0; i < this->N; i++){
+        double _Aij, _Bij, _Cij, _Dij;  // BEM matrix element
+        double _a, _k, L;   // Matrix parameter
+        double xi, yi;      // Current element evaluated
+        double xj, yj;      // Iteration element
+        double xn, yn;      // Normal vector
+
+        // Update the evaluated element
+        xi = this->BEM_elm.xm[i];
+        yi = this->BEM_elm.ym[i];
+        C_Vec(i) = this->BEM_elm.F[i];
+        D_Vec(i) = this->BEM_elm.dFdn[i];
+
+        // Calculate all element
+        for (int j = 0; j < this->N; j++){
+            // Update the iterated element
+            xj = this->BEM_elm.xm[j];
+            yj = this->BEM_elm.ym[j];
+            xn = this->BEM_elm.xn[j];
+            yn = this->BEM_elm.yn[j];
+            L  = this->BEM_elm.L[j];
+
+            // Calculating the matrix element
+            if (Par::opt_BEM == 1){
+                _a = this->calc_a(xi,yi,xj,yj,xn,yn);
+                _k = this->calc_k(xi,yi,xj,yj,xn,yn);
+                _Aij = this->calc_Aij(_a,_k,L);
+                _Bij = this->calc_Bij(_a,_k,L);
+                _Cij = this->calc_Cij(_a,_k,L);
+                _Dij = this->calc_Dij(_a,_k,L);
+            }else if (Par::opt_BEM == 2){
+                _Aij = this->calc_dGdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Bij = this->calc_G_dL(xi,yi,xj,yj,xn,yn,L);
+                _Cij = this->calc_dWdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Dij = this->calc_W_dL(xi,yi,xj,yj,xn,yn,L);
+            }
+            
+            // Matrix
+            if (i == j){
+                A_Mat(i, j) = _Aij - 0.5;
+            }else{
+                A_Mat(i, j) = _Aij;
+            }
+            B_Mat(i, j) = _Bij;
+            C_Mat(i, j) = _Cij;
+            D_Mat(i, j) = _Dij;
+        }
+    }
+    
+    save.write_Matrix(A_Mat, "ABhm");
+    save.write_Matrix(B_Mat, "BBhm");
+    save.write_Matrix(C_Mat, "CBhm");
+    save.write_Matrix(D_Mat, "DBhm");
+
+    // ================= Fill the BEM vector =================
+    // *******************************************************
+    for (int i = 0; i < this->N; i++){
+        double _dpdn, _p;   // The boundary value
+        bool p_type;        // The neumann type flag
+        _dpdn  = this->BEM_elm.dpdn[i];
+        _p     = this->BEM_elm.p[i];
+        p_type = this->BEM_elm.p_type[i];
+        
+        // Assign the boundary value
+        if (p_type == true){
+            // Neumann boundary condition
+            B_Vec(i) = _dpdn;
+        }
+        if (p_type == false){
+            // Dirichlet boundary condition
+            calcBEM::swap_col(A_Mat, B_Mat, i);
+            B_Vec(i) = _p;
+        }
+    }
+
+    // Solve the matrix by using matrix invertion
+    // ******************************************
+    Eigen::VectorXd bi = (B_Mat * B_Vec) - (C_Mat * C_Vec) + (D_Mat * D_Vec);
+    A_Vec = A_Mat.bdcSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(bi);
+
+    // ================= Update the boundary value on the element ================= 
+    // ****************************************************************************
+    for (int i = 0; i < this->N; i++){
+        // Neumann boundary condition
+        if (this->BEM_elm.p_type[i] == true){
+            this->BEM_elm.p[i] = A_Vec(i);
+        }
+        // Dirichlet boundary condition
+        else if (this->BEM_elm.p_type[i] == false){
+            this->BEM_elm.dpdn[i] = A_Vec(i);
+        }
+    }
+
+    // Displaying the computational time
+    _time = clock() - _time;
+    printf("<-> Calculating biharmonic comp. time  [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+}
+
+// Calculate phi inside the domain region based on laplacian calculation
+void calcBEM::bhm_internal_calc(intElement& intElm){
+    // initialization generate internal node starting log
+    printf("\nBEM calculating biharmonic internal node ...\n");
+    clock_t _time = clock();
+
+    // Initialize the group value
+    double A_group, B_group, C_group, D_group;
+
+    // Resize the internal node element phi variable
+    intElm.phi.resize(intElm.num);
+
+    // ================= Fill the BEM matrix =================
+    // *******************************************************
+    for (int i = 0; i < intElm.num; i++){
+        // Internal variable
+        double _Aij, _Bij, _Cij, _Dij;  // BEM element parameter
+        double _p, _dpdn, _F, _dFdn;  // BEM element parameter
+        double _a, _k, L;   // Matrix parameter
+        double xi, yi;      // Current internal node evaluated
+        double xj, yj;      // Iteration element
+        double xn, yn;      // Normal vector
+
+        // Update the current evaluated element + update C and D vector element
+        xi = intElm.x[i];
+        yi = intElm.y[i];
+        A_group = 0;
+        B_group = 0;
+        C_group = 0;
+        D_group = 0;
+
+        // Calculate all boundary element
+        for (int j = 0; j < this->N; j++){
+            // Update the iterated element
+            xj = this->BEM_elm.xm[j];
+            yj = this->BEM_elm.ym[j];
+            xn = this->BEM_elm.xn[j];
+            yn = this->BEM_elm.yn[j];
+            L  = this->BEM_elm.L[j];
+            _p = this->BEM_elm.p[j];
+            _F = this->BEM_elm.F[j];
+            _dpdn = this->BEM_elm.dpdn[j];
+            _dFdn = this->BEM_elm.dFdn[j];
+
+            // Calculating the matrix element
+            if (Par::opt_BEM == 1){
+                _a = this->calc_a(xi,yi,xj,yj,xn,yn);
+                _k = this->calc_k(xi,yi,xj,yj,xn,yn);
+                _Aij = this->calc_Aij(_a,_k,L);
+                _Bij = this->calc_Bij(_a,_k,L);
+                _Cij = this->calc_Cij(_a,_k,L);
+                _Dij = this->calc_Dij(_a,_k,L);
+            }else if (Par::opt_BEM == 2){
+                _Aij = this->calc_dGdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Bij = this->calc_G_dL(xi,yi,xj,yj,xn,yn,L);
+                _Cij = this->calc_dWdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Dij = this->calc_W_dL(xi,yi,xj,yj,xn,yn,L);
+            }
+            
+            // Matrix
+            A_group += _Aij * _p;
+            B_group += _Bij * _dpdn;
+            C_group += _Cij * _F;
+            D_group += _Dij * _dFdn;
+        }
+
+        // Update the phi value of the internal node
+        intElm.phi[i] = A_group - B_group + C_group - D_group;
+    }
+    
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("<-> Internal node biharmonic calculation\n");
+    printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
+}
+
+// Calculate phi inside the domain region based on laplacian calculation
+void calcBEM::lap_internal_calc(intElement& intElm){
+    // initialization generate internal node starting log
+    printf("\nBEM calculating laplace internal node ...\n");
+    clock_t _time = clock();
+
+    // Initialize the group value
+    double A_group, B_group;
+
+    // Resize the internal node element phi variable
+    intElm.phi.resize(intElm.num);
+
+    // ================= Fill the BEM matrix =================
+    // *******************************************************
+    for (int i = 0; i < intElm.num; i++){
+        // Internal variable
+        double _Aij, _Bij, _Cij, _Dij;  // BEM element parameter
+        double _p, _dpdn, _F, _dFdn;  // BEM element parameter
+        double _a, _k, L;   // Matrix parameter
+        double xi, yi;      // Current internal node evaluated
+        double xj, yj;      // Iteration element
+        double xn, yn;      // Normal vector
+
+        // Update the current evaluated element + update C and D vector element
+        xi = intElm.x[i];
+        yi = intElm.y[i];
+        A_group = 0;
+        B_group = 0;
+
+        // Calculate all boundary element
+        for (int j = 0; j < this->N; j++){
+            // Update the iterated element
+            xj = this->BEM_elm.xm[j];
+            yj = this->BEM_elm.ym[j];
+            xn = this->BEM_elm.xn[j];
+            yn = this->BEM_elm.yn[j];
+            L  = this->BEM_elm.L[j];
+            _F = this->BEM_elm.F[j];
+            _dFdn = this->BEM_elm.dFdn[j];
+
+            // Calculating the matrix element
+            if (Par::opt_BEM == 1){
+                _a = this->calc_a(xi,yi,xj,yj,xn,yn);
+                _k = this->calc_k(xi,yi,xj,yj,xn,yn);
+                _Aij = this->calc_Aij(_a,_k,L);
+                _Bij = this->calc_Bij(_a,_k,L);
+            }else if (Par::opt_BEM == 2){
+                _Aij = this->calc_dGdn_dL(xi,yi,xj,yj,xn,yn,L);
+                _Bij = this->calc_G_dL(xi,yi,xj,yj,xn,yn,L);
+            }
+            
+            // Matrix
+            A_group += _Aij * _F;
+            B_group += _Bij * _dFdn;
+        }
+
+        // Update the phi value of the internal node
+        intElm.phi[i] = A_group - B_group;
+    }
+    
+    // Displaying the computational time
+    _time = clock() - _time;
+	printf("<-> Internal node laplace calculation\n");
     printf("    comp. time                         [%8.4f s]\n", (double)_time/CLOCKS_PER_SEC);
 }

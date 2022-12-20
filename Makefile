@@ -29,6 +29,7 @@ SRCS		= main.cpp\
 			src/Initialization/init_internal.cpp\
 			src/Initialization/init_assignBC.cpp\
 			src/Saving/save_data.cpp\
+			src/BEM/BEM_manager.cpp\
 			src/BEM/BEM.cpp\
 			src/BEM/BEM_utils.cpp\
 			src/LSMPS/LSMPSa.cpp\

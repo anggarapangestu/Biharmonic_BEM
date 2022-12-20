@@ -3,15 +3,14 @@
 #=================================================#
 
 +-------------- Material Properties --------------+
-Elasticity (E)                      :    69.00 GPa
+Elasticity (E)                      :     0.00 GPa
 Poisson Ratio (nu)                  :     0.30 [-]
-Lame's constant mu                  :    26.54 GPa
-Lame's constant lambda              :    39.81 GPa
+Lame's constant mu                  :     0.00 GPa
+Lame's constant lambda              :     0.00 GPa
 +-------------------------------------------------+
 
 +----------- Simulation Setting Option -----------+
-Simulation type                     :   Biharmonic
-Biharmonic simulation type          : Plane Strain
+Simulation type                     :  Temperature
 Body option                         :       type 2
 Internal node distribution option   :       type 2
 BEM calculation option              :       type 1
@@ -19,8 +18,8 @@ Cylindrical coordinate calculation  :    turned on
 +-------------------------------------------------+
 
 +---------------- Additional Data ----------------+
-Domain x length                     :     3.0000 m
-Domain x length                     :     3.0000 m
+Domain x length                     :     4.5000 m
+Domain x length                     :     2.5000 m
 Base internal node spacing          :     0.0400 m
 Base panel length                   :     0.0400 m
 Number of boundary surface          :          2
